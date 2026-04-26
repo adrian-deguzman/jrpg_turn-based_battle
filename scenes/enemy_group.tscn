@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://d1gn3brt5644m"]
+
+[ext_resource type="Script" uid="uid://cluomkspky18d" path="res://scripts/enemy_group.gd" id="1_nfstq"]
+[ext_resource type="PackedScene" uid="uid://c4m4wbplyxgqi" path="res://scenes/character.tscn" id="2_02kwl"]
+
+[node name="EnemyGroup" type="Node2D" unique_id=919007267]
+script = ExtResource("1_nfstq")
+
+[node name="Character" parent="." unique_id=1830078391 instance=ExtResource("2_02kwl")]
+
+[node name="Character2" parent="." unique_id=1820117211 instance=ExtResource("2_02kwl")]
+
+[node name="Character3" parent="." unique_id=1586336237 instance=ExtResource("2_02kwl")]
