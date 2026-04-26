@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://c4m4wbplyxgqi"]
+
+[ext_resource type="Texture2D" uid="uid://ca6vvvbah056c" path="res://assets/chibi-male/Swordsman/Idle.png" id="1_agfs1"]
+
+[node name="Character" type="CharacterBody2D" unique_id=1830078391]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=798288966]
+texture = ExtResource("1_agfs1")
+hframes = 8
+
+[node name="focus" type="Sprite2D" parent="." unique_id=1026607052]
+
+[node name="ProgressBar" type="ProgressBar" parent="." unique_id=664145567]
+offset_right = 4.0
+offset_bottom = 27.0
+
+[node name="AnimationTree" type="AnimationTree" parent="." unique_id=386977395]
