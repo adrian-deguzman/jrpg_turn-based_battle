@@ -58,9 +58,9 @@ flip_v = true
 
 [node name="ProgressBar" type="ProgressBar" parent="." unique_id=664145567]
 offset_left = -34.655
-offset_top = -111.03
+offset_top = -100.435
 offset_right = 65.345
-offset_bottom = -84.03
+offset_bottom = -73.435
 scale = Vector2(0.7, 0.7)
 value = 100.0
 
