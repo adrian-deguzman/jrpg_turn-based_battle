@@ -6,7 +6,7 @@
 [node name="BattleScene" type="Node2D" unique_id=2089658605]
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=794658426]
-modulate = Color(1.6095817, 1.6095817, 1.6095817, 1)
+modulate = Color(0.6773353, 0.6773353, 0.6773353, 1)
 offset_left = -127.0
 offset_top = -133.0
 offset_right = -55.888885
