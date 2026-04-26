@@ -9,7 +9,7 @@ func _ready() -> void:
 	for i in players.size():
 		players[i].position = Vector2(0, i*180)
 		
-		players[0].focus()
+		#players[0].focus()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
