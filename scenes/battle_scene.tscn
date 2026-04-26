@@ -2,11 +2,12 @@
 
 [ext_resource type="PackedScene" uid="uid://d1gn3brt5644m" path="res://scenes/enemy_group.tscn" id="1_idkgt"]
 [ext_resource type="Texture2D" uid="uid://bola1vo55met5" path="res://assets/background/dead forest.png" id="1_kinr6"]
+[ext_resource type="PackedScene" uid="uid://dkwdcaon6qmq1" path="res://scenes/player_group.tscn" id="3_rca61"]
 
 [node name="BattleScene" type="Node2D" unique_id=2089658605]
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=794658426]
-modulate = Color(0.6773353, 0.6773353, 0.6773353, 1)
+modulate = Color(0.45, 0.45, 0.45, 1)
 offset_left = -173.0
 offset_top = -203.0
 offset_right = -101.888885
@@ -16,4 +17,7 @@ texture = ExtResource("1_kinr6")
 expand_mode = 3
 
 [node name="EnemyGroup" parent="." unique_id=919007267 instance=ExtResource("1_idkgt")]
-position = Vector2(809, 243)
+position = Vector2(816, 209)
+
+[node name="PlayerGroup" parent="." unique_id=57050628 instance=ExtResource("3_rca61")]
+position = Vector2(313, 206)
