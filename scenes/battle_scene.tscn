@@ -21,3 +21,37 @@ position = Vector2(816, 209)
 
 [node name="PlayerGroup" parent="." unique_id=57050628 instance=ExtResource("3_rca61")]
 position = Vector2(313, 206)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=783896607]
+
+[node name="choice" type="VBoxContainer" parent="CanvasLayer" unique_id=643889893]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -55.0
+offset_top = -171.0
+offset_right = 55.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Attack" type="Button" parent="CanvasLayer/choice" unique_id=862653379]
+layout_mode = 2
+text = "Attack"
+
+[node name="Shoot" type="Button" parent="CanvasLayer/choice" unique_id=202369878]
+layout_mode = 2
+text = "Shoot"
+
+[node name="Defend" type="Button" parent="CanvasLayer/choice" unique_id=423918567]
+layout_mode = 2
+text = "Defend"
+
+[node name="Drink Potion" type="Button" parent="CanvasLayer/choice" unique_id=1096377349]
+layout_mode = 2
+text = "Drink Potion"
+
+[node name="Power Punch" type="Button" parent="CanvasLayer/choice" unique_id=506375910]
+layout_mode = 2
+text = "Power Punch"
