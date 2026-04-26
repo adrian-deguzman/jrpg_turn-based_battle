@@ -2,12 +2,51 @@
 
 [ext_resource type="Script" uid="uid://cluomkspky18d" path="res://scripts/enemy_group.gd" id="1_nfstq"]
 [ext_resource type="PackedScene" uid="uid://c4m4wbplyxgqi" path="res://scenes/character.tscn" id="2_02kwl"]
+[ext_resource type="Texture2D" uid="uid://dq5qbtm845l8q" path="res://assets/cursor/precision4.png" id="3_02kwl"]
+[ext_resource type="Texture2D" uid="uid://4fmgryqblpk3" path="res://assets/enemygroup/Gotoku/Idle.png" id="4_w1oj2"]
+[ext_resource type="Texture2D" uid="uid://mriqt4xegh8f" path="res://assets/enemygroup/Yurei/Idle.png" id="5_pqsow"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_i5m1a"]
+load_path = "res://.godot/imported/Idle.png-fa3e81c4bc03b684143a306c538dee8c.ctex"
 
 [node name="EnemyGroup" type="Node2D" unique_id=919007267]
 script = ExtResource("1_nfstq")
 
 [node name="Character" parent="." unique_id=1830078391 instance=ExtResource("2_02kwl")]
 
-[node name="Character2" parent="." unique_id=1820117211 instance=ExtResource("2_02kwl")]
+[node name="Sprite2D" parent="Character" index="1" unique_id=798288966]
+texture = SubResource("CompressedTexture2D_i5m1a")
 
-[node name="Character3" parent="." unique_id=1586336237 instance=ExtResource("2_02kwl")]
+[node name="focus" parent="Character" index="2" unique_id=1026607052]
+modulate = Color(1, 0.41000003, 0.41000003, 0.8156863)
+position = Vector2(2, -73)
+scale = Vector2(2, 2)
+texture = ExtResource("3_02kwl")
+
+[node name="Character2" parent="." unique_id=1395226398 instance=ExtResource("2_02kwl")]
+
+[node name="Sprite2D" parent="Character2" index="1" unique_id=798288966]
+texture = ExtResource("4_w1oj2")
+hframes = 5
+
+[node name="focus" parent="Character2" index="2" unique_id=1026607052]
+modulate = Color(1, 0.41000003, 0.41000003, 0.8156863)
+position = Vector2(2, -73)
+scale = Vector2(2, 2)
+texture = ExtResource("3_02kwl")
+
+[node name="Character3" parent="." unique_id=2122565170 instance=ExtResource("2_02kwl")]
+
+[node name="Sprite2D" parent="Character3" index="1" unique_id=798288966]
+texture = ExtResource("5_pqsow")
+hframes = 5
+
+[node name="focus" parent="Character3" index="2" unique_id=1026607052]
+modulate = Color(1, 0.41000003, 0.41000003, 0.8156863)
+position = Vector2(2, -73)
+scale = Vector2(2, 2)
+texture = ExtResource("3_02kwl")
+
+[editable path="Character"]
+[editable path="Character2"]
+[editable path="Character3"]
