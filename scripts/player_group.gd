@@ -15,19 +15,11 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-	#if Input.is_action_just_pressed("ui_up"):
-		#if index > 0:
-			#index -= 1
-			#switch_focus(index, index + 1)
-	#if Input.is_action_just_pressed("ui_down"):
-		#if index < enemies.size() - 1:
-			#index += 1
-			#switch_focus(index, index - 1)
+#func _process(delta: float) -> void:
+	#pass
 	
 func _on_enemy_group_next_player() -> void:
-	if battle_start:
+	if not battle_start:
 		if index < players.size() - 1:
 			index += 1
 			switch_focus(index, index - 1)
@@ -46,6 +38,7 @@ func _on_enemy_group_start_choose() -> void:
 
 
 func _on_enemy_group_start_attack() -> void:
+	print("Battle starts!!!")
 	battle_start = true
 	for i in players.size():
 		players[i].unfocus()
