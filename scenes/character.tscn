@@ -39,10 +39,13 @@ _data = {
 &"hurt": SubResource("Animation_dp8ca")
 }
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_rkhd4"]
+
 [node name="Character" type="CharacterBody2D" unique_id=1830078391]
 texture_filter = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=798288966]
+position = Vector2(0, -64.02)
 texture = ExtResource("1_rkhd4")
 hframes = 6
 
@@ -55,11 +58,15 @@ flip_v = true
 
 [node name="ProgressBar" type="ProgressBar" parent="." unique_id=664145567]
 offset_left = -34.655
-offset_top = -50.0
+offset_top = -111.03
 offset_right = 65.345
-offset_bottom = -23.0
+offset_bottom = -84.03
 scale = Vector2(0.7, 0.7)
 value = 100.0
 
 [node name="AnimationTree" type="AnimationTree" parent="." unique_id=386977395]
 libraries/ = SubResource("AnimationLibrary_0lw5n")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2125143929]
+position = Vector2(0, -31.3)
+shape = SubResource("CircleShape2D_rkhd4")
