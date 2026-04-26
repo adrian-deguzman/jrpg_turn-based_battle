@@ -1,10 +1,12 @@
 [gd_scene format=3 uid="uid://86tbiektq2k3"]
 
+[ext_resource type="Script" uid="uid://b8yqgor4f8dis" path="res://scripts/battle_scene.gd" id="1_8qdv8"]
 [ext_resource type="PackedScene" uid="uid://d1gn3brt5644m" path="res://scenes/enemy_group.tscn" id="1_idkgt"]
 [ext_resource type="Texture2D" uid="uid://bola1vo55met5" path="res://assets/background/dead forest.png" id="1_kinr6"]
 [ext_resource type="PackedScene" uid="uid://dkwdcaon6qmq1" path="res://scenes/player_group.tscn" id="3_rca61"]
 
 [node name="BattleScene" type="Node2D" unique_id=2089658605]
+script = ExtResource("1_8qdv8")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=794658426]
 modulate = Color(0.45, 0.45, 0.45, 1)

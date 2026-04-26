@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://c4m4wbplyxgqi"]
 
+[ext_resource type="Script" uid="uid://dj3h1sxmc7kyh" path="res://scripts/character.gd" id="1_lrhn5"]
 [ext_resource type="Texture2D" uid="uid://dbwnev7k7eg30" path="res://assets/enemygroup/Onre/Idle.png" id="1_rkhd4"]
 [ext_resource type="Texture2D" uid="uid://dt66tchlvhuvm" path="res://assets/cursor/link3.png" id="2_lrhn5"]
 
@@ -43,6 +44,7 @@ _data = {
 
 [node name="Character" type="CharacterBody2D" unique_id=1830078391]
 texture_filter = 1
+script = ExtResource("1_lrhn5")
 
 [node name="Polygon2D" type="Polygon2D" parent="." unique_id=1661212225]
 modulate = Color(1, 1, 1, 0.22745098)
@@ -73,7 +75,7 @@ offset_bottom = -134.99
 scale = Vector2(0.7, 0.7)
 value = 100.0
 
-[node name="AnimationTree" type="AnimationTree" parent="." unique_id=386977395]
+[node name="AnimationPlayer" type="AnimationTree" parent="." unique_id=386977395]
 libraries/ = SubResource("AnimationLibrary_0lw5n")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2125143929]
