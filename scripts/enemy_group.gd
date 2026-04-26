@@ -6,7 +6,7 @@ var enemies: Array = []
 func _ready() -> void:
 	enemies = get_children()
 	for i in enemies.size():
-		enemies[i].position = Vector2(0, i*150)
+		enemies[i].position = Vector2(0, i*130)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
