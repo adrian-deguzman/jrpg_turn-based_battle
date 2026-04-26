@@ -24,10 +24,14 @@ tracks/0/keys = {
 "values": [Color(18.892, 18.892, 18.892, 1), Color(1, 1, 1, 1), Color(18.892, 18.892, 18.892, 1), Color(1, 1, 1, 1)]
 }
 
+[sub_resource type="Animation" id="Animation_dp8ca"]
+resource_name = "idle"
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_dp8ca"]
 _data = {
 &"RESET": SubResource("Animation_lrhn5"),
-&"hurt": SubResource("Animation_my7n2")
+&"hurt": SubResource("Animation_my7n2"),
+&"idle": SubResource("Animation_dp8ca")
 }
 
 [node name="Character" type="CharacterBody2D" unique_id=1830078391]

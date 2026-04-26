@@ -6,7 +6,9 @@ var is_battling: bool = false
 var index: int = 0
 @onready var choice: VBoxContainer = $"../CanvasLayer/choice"
 
+signal start_choose
 signal next_player
+signal start_attack
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -39,6 +41,8 @@ func _process(delta: float) -> void:
 		_action(action_queue)
 		
 func _action(stack):
+	_reset_focus()
+	emit_signal("start_attack")
 	for i in stack:
 		enemies[i].take_damage(1)
 		await get_tree().create_timer(1).timeout
@@ -61,6 +65,7 @@ func _reset_focus():
 
 func _start_choosing():
 	_reset_focus()
+	emit_signal("start_choose")
 	enemies[0].focus()	
 
 

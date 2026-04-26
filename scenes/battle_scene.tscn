@@ -59,4 +59,6 @@ layout_mode = 2
 text = "Power Punch"
 
 [connection signal="next_player" from="EnemyGroup" to="PlayerGroup" method="_on_enemy_group_next_player"]
+[connection signal="start_attack" from="EnemyGroup" to="PlayerGroup" method="_on_enemy_group_start_attack"]
+[connection signal="start_choose" from="EnemyGroup" to="PlayerGroup" method="_on_enemy_group_start_choose"]
 [connection signal="pressed" from="CanvasLayer/choice/Attack" to="EnemyGroup" method="_on_attack_pressed"]
