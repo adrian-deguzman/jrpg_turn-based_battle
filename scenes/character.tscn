@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c4m4wbplyxgqi"]
 
-[ext_resource type="Texture2D" uid="uid://dx6n8kyoo7tij" path="res://assets/chibi-male/Wizard/Idle.png" id="1_rkhd4"]
+[ext_resource type="Texture2D" uid="uid://dbwnev7k7eg30" path="res://assets/enemygroup/Onre/Idle.png" id="1_rkhd4"]
 [ext_resource type="Texture2D" uid="uid://dt66tchlvhuvm" path="res://assets/cursor/link3.png" id="2_lrhn5"]
 
 [sub_resource type="Animation" id="Animation_my7n2"]
@@ -45,15 +45,17 @@ _data = {
 texture_filter = 1
 
 [node name="Polygon2D" type="Polygon2D" parent="." unique_id=1661212225]
-modulate = Color(1, 1, 1, 0.40784314)
-position = Vector2(1, 15)
-scale = Vector2(0.67948717, 0.5290859)
+modulate = Color(1, 1, 1, 0.22745098)
+position = Vector2(-0.5, 14.999999)
+scale = Vector2(1.0897436, 0.5290859)
 color = Color(0, 0, 0, 1)
 polygon = PackedVector2Array(-39, -28.296295, 0, -37.80105, 39, -28.296295, 0, -17.010471)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=798288966]
-position = Vector2(0, -64.02)
+position = Vector2(0, -128.025)
+scale = Vector2(2, 2)
 texture = ExtResource("1_rkhd4")
+flip_h = true
 hframes = 6
 
 [node name="focus" type="Sprite2D" parent="." unique_id=1026607052]
@@ -65,9 +67,9 @@ flip_v = true
 
 [node name="ProgressBar" type="ProgressBar" parent="." unique_id=664145567]
 offset_left = -34.655
-offset_top = -100.435
+offset_top = -161.99
 offset_right = 65.345
-offset_bottom = -73.435
+offset_bottom = -134.99
 scale = Vector2(0.7, 0.7)
 value = 100.0
 

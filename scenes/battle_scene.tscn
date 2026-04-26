@@ -7,13 +7,13 @@
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=794658426]
 modulate = Color(0.6773353, 0.6773353, 0.6773353, 1)
-offset_left = -127.0
-offset_top = -133.0
-offset_right = -55.888885
-offset_bottom = -93.0
-scale = Vector2(20.105, 20.105)
+offset_left = -173.0
+offset_top = -203.0
+offset_right = -101.888885
+offset_bottom = -163.0
+scale = Vector2(21.345, 21.345)
 texture = ExtResource("1_kinr6")
 expand_mode = 3
 
 [node name="EnemyGroup" parent="." unique_id=919007267 instance=ExtResource("1_idkgt")]
-position = Vector2(298, 321)
+position = Vector2(809, 243)
