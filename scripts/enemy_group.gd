@@ -22,7 +22,8 @@ func _process(delta: float) -> void:
 		if index < enemies.size() - 1:
 			index += 1
 			switch_focus(index, index - 1)
-
+	if Input.is_action_just_pressed("ui_accept"):
+		enemies[index].take_damage(1)
 	
 func switch_focus(x, y):
 	enemies[x].focus()

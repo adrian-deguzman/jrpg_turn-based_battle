@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 @onready var _focus: Sprite2D = $focus
 @onready var progress_bar: ProgressBar = $ProgressBar
-@onready var animation_player: AnimationTree = $AnimationPlayer
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 @export var MAX_HEALTH: float = 7
 

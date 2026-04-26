@@ -4,22 +4,12 @@
 [ext_resource type="Texture2D" uid="uid://dbwnev7k7eg30" path="res://assets/enemygroup/Onre/Idle.png" id="1_rkhd4"]
 [ext_resource type="Texture2D" uid="uid://dt66tchlvhuvm" path="res://assets/cursor/link3.png" id="2_lrhn5"]
 
-[sub_resource type="Animation" id="Animation_my7n2"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:self_modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 1)]
-}
+[sub_resource type="CircleShape2D" id="CircleShape2D_rkhd4"]
 
-[sub_resource type="Animation" id="Animation_dp8ca"]
+[sub_resource type="Animation" id="Animation_lrhn5"]
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_my7n2"]
 resource_name = "hurt"
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -28,19 +18,17 @@ tracks/0/path = NodePath("Sprite2D:self_modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.20000002, 0.40000004, 0.6),
+"times": PackedFloat32Array(0.077281564, 0.20000002, 0.40000004, 0.5227185),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [Color(18.892157, 18.892157, 18.892157, 1), Color(1, 1, 1, 1), Color(18.892157, 18.892157, 18.892157, 1), Color(1, 1, 1, 1)]
+"values": [Color(18.892, 18.892, 18.892, 1), Color(1, 1, 1, 1), Color(18.892, 18.892, 18.892, 1), Color(1, 1, 1, 1)]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_0lw5n"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dp8ca"]
 _data = {
-&"RESET": SubResource("Animation_my7n2"),
-&"hurt": SubResource("Animation_dp8ca")
+&"RESET": SubResource("Animation_lrhn5"),
+&"hurt": SubResource("Animation_my7n2")
 }
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_rkhd4"]
 
 [node name="Character" type="CharacterBody2D" unique_id=1830078391]
 texture_filter = 1
@@ -75,9 +63,9 @@ offset_bottom = -134.99
 scale = Vector2(0.7, 0.7)
 value = 100.0
 
-[node name="AnimationPlayer" type="AnimationTree" parent="." unique_id=386977395]
-libraries/ = SubResource("AnimationLibrary_0lw5n")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2125143929]
 position = Vector2(0, -31.3)
 shape = SubResource("CircleShape2D_rkhd4")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=32323422]
+libraries/ = SubResource("AnimationLibrary_dp8ca")
