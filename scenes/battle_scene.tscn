@@ -34,29 +34,51 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -55.0
-offset_top = -171.0
+offset_top = -234.88501
 offset_right = 55.0
+offset_bottom = -63.884644
 grow_horizontal = 2
 grow_vertical = 0
+scale = Vector2(1.315, 1.315)
 
 [node name="Attack" type="Button" parent="CanvasLayer/choice" unique_id=862653379]
 layout_mode = 2
+tooltip_text = "Low damage attach and sure hit.
+
+Detailed:
+Deal 1 damage. Never misses."
 text = "Attack"
 
 [node name="Shoot" type="Button" parent="CanvasLayer/choice" unique_id=202369878]
 layout_mode = 2
+tooltip_text = "High damage attact with 50% miss rate.
+
+Detailed:
+Deal 2.5 damage but 50% chance of missing."
 text = "Shoot"
 
 [node name="Defend" type="Button" parent="CanvasLayer/choice" unique_id=423918567]
 layout_mode = 2
+tooltip_text = "Block one attack.
+
+Detailed:
+Creates a shield to block the first attack received, negating all damage. Succeeding damage in the same round will not be affected."
 text = "Defend"
 
 [node name="Drink Potion" type="Button" parent="CanvasLayer/choice" unique_id=1096377349]
 layout_mode = 2
+tooltip_text = "Heal small health.
+
+Detailed:
+Recover 0.5 health. For context, max health is 3."
 text = "Drink Potion"
 
 [node name="Power Punch" type="Button" parent="CanvasLayer/choice" unique_id=506375910]
 layout_mode = 2
+tooltip_text = "Charge for one round, and deal high damage on next round that is also sure hit.
+
+Detailed:
+Charges on the first round. On the following round, player skips move selection but deals 2.5 damage that never misses."
 text = "Power Punch"
 
 [node name="ActionText" type="Label" parent="CanvasLayer" unique_id=1396912143]

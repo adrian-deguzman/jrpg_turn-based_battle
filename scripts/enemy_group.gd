@@ -219,7 +219,7 @@ func _action(stack):
 		
 		acting_player_idx += 1
 	
-	await get_tree().create_timer(1.5).timeout
+	await get_tree().create_timer(0.5).timeout
 	# --- ENEMY PHASE ---
 	var enemy_idx = 0
 	for enemy in enemies:
