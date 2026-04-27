@@ -5,12 +5,12 @@ extends CharacterBody2D
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var shield: Sprite2D = $Shield # Make sure you added this node!
 
-@export var MAX_HEALTH: float = 7
+@export var MAX_HEALTH: float = 4
 
 var is_dead: bool = false # Add variable to track if the character is dead
 var is_defending: bool = false # Add variable to track if they are blocking
 
-var health: float = 3:
+var health: float = MAX_HEALTH:
 	set(value):
 		# clampf ensures health never drops below 0 or goes above MAX_HEALTH
 		health = clampf(value, 0, MAX_HEALTH) 
@@ -42,9 +42,7 @@ func unfocus():
 func defend():
 	is_defending = true
 	if shield:
-		# Godot's AnimationPlayer leaves properties exactly how they were 
-		# at the end of the animation. We must reset the color and alpha 
-		# just in case the "defense" animation faded it out!
+		# reset the shield after "defense" animation
 		shield.modulate = Color(1, 1, 1, 1)
 		shield.self_modulate = Color(1, 1, 1, 1)
 		shield.show()
