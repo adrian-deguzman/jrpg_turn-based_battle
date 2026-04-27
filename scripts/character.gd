@@ -5,7 +5,7 @@ extends CharacterBody2D
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var shield: Sprite2D = $Shield # Make sure you added this node!
 
-@export var MAX_HEALTH: float = 4
+@export var MAX_HEALTH: float = 1
 
 var is_dead: bool = false # Add variable to track if the character is dead
 var is_defending: bool = false # Add variable to track if they are blocking

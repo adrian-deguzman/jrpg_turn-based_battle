@@ -9,6 +9,11 @@ var index: int = 0
 @onready var choice: VBoxContainer = $"../CanvasLayer/choice"
 @onready var action_text: Label = $"../CanvasLayer/ActionText" # Reference to our new UI
 
+# NEW: References to our Game Over UI
+@onready var game_over_screen: Panel = $"../CanvasLayer/GameOverScreen" 
+@onready var game_over_text: Label = $"../CanvasLayer/GameOverScreen/GameOverText"
+@onready var restart_button: Button = $"../CanvasLayer/GameOverScreen/RestartButton" # New Button
+
 # The choices the enemy can make
 #var enemy_moves: Array = ["Attack", "Shoot", "Defend", "Drink Potion", "Power Punch"]
 var enemy_moves: Array = ["Attack", "Defend"]
@@ -29,7 +34,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if not choice.visible:
+	if not choice.visible and not game_over_screen.visible: # Prevent input if game over
 		if Input.is_action_just_pressed("ui_up"):
 			_move_enemy_focus(-1)
 		if Input.is_action_just_pressed("ui_down"):
@@ -79,6 +84,38 @@ func _move_enemy_focus(direction: int):
 			index = temp_index
 			switch_focus(index, old_index)
 			break
+			
+# --- NEW: Check Win/Loss Condition ---
+func _check_end_battle() -> bool:
+	var alive_players = 0
+	if player_group:
+		for p in player_group.players:
+			if not p.is_dead:
+				alive_players += 1
+				
+	var alive_enemies = 0
+	for e in enemies:
+		if not e.is_dead:
+			alive_enemies += 1
+			
+	if alive_enemies == 0:
+		_show_game_over("You won!")
+		return true
+	elif alive_players == 0:
+		_show_game_over("You lost!")
+		return true
+		
+	return false
+
+func _show_game_over(message: String):
+	action_text.hide()
+	choice.hide()
+	_reset_focus()
+	
+	game_over_text.text = message
+	game_over_screen.show()
+	restart_button.grab_focus() # Give focus so the player can press Enter/Space
+# -------------------------------------
 	
 func _action(stack):
 	_reset_focus()
@@ -128,9 +165,12 @@ func _action(stack):
 			# Shield was already raised in Pre-Round Setup, just wait a moment
 			
 		await get_tree().create_timer(2).timeout
-		# Hide the text
 		action_text.hide()
-		# Wait 0.5 seconds as a gap before the next turn
+		
+		# Check if the player's attack ended the game!
+		if _check_end_battle():
+			return # Stop everything if the battle is over
+			
 		await get_tree().create_timer(0.5).timeout
 		
 		acting_player_idx += 1
@@ -170,11 +210,13 @@ func _action(stack):
 			_show_action_text(enemy_name, chosen_move, "")
 			# Shield was already raised in Pre-Round Setup, just wait a moment
 			
-		# Wait 2 second between enemy attacks for game feel
 		await get_tree().create_timer(2).timeout
-		# Hide the text
 		action_text.hide()
-		# Wait 0.5 seconds as a gap before the next turn
+		
+		# Check if the enemy's attack ended the game!
+		if _check_end_battle():
+			return # Stop everything if the battle is over
+			
 		await get_tree().create_timer(0.5).timeout
 		enemy_idx += 1
 		
@@ -266,3 +308,7 @@ func _on_defend_pressed() -> void:
 	action_queue.push_back({"move": "Defend", "target": -1})
 	emit_signal("next_player")
 	_check_action_queue()
+
+# NEW FUNCTION: Reloads the entire scene to reset the game to its starting state!
+func _on_restart_button_pressed() -> void:
+	get_tree().reload_current_scene()

@@ -69,8 +69,35 @@ theme_override_font_sizes/font_size = 24
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="GameOverScreen" type="Panel" parent="CanvasLayer" unique_id=1090136640]
+visible = false
+self_modulate = Color(0, 0, 0, 1)
+offset_left = 341.0
+offset_top = 145.0
+offset_right = 832.0
+offset_bottom = 480.0
+
+[node name="GameOverText" type="Label" parent="CanvasLayer/GameOverScreen" unique_id=1198800983]
+layout_mode = 0
+offset_left = 157.00002
+offset_top = 57.0
+offset_right = 324.0
+offset_bottom = 112.0
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RestartButton" type="Button" parent="CanvasLayer/GameOverScreen" unique_id=732350829]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 253.0
+offset_right = 281.0
+offset_bottom = 284.0
+text = "Restart"
+
 [connection signal="next_player" from="EnemyGroup" to="PlayerGroup" method="_on_enemy_group_next_player"]
 [connection signal="start_attack" from="EnemyGroup" to="PlayerGroup" method="_on_enemy_group_start_attack"]
 [connection signal="start_choose" from="EnemyGroup" to="PlayerGroup" method="_on_enemy_group_start_choose"]
 [connection signal="pressed" from="CanvasLayer/choice/Attack" to="EnemyGroup" method="_on_attack_pressed"]
 [connection signal="pressed" from="CanvasLayer/choice/Defend" to="EnemyGroup" method="_on_defend_pressed"]
+[connection signal="pressed" from="CanvasLayer/GameOverScreen/RestartButton" to="EnemyGroup" method="_on_restart_button_pressed"]
