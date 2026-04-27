@@ -1,10 +1,15 @@
 extends Node2D
 
+@export var player_group: Node2D # Assign this in the Inspector!
+
 var enemies: Array = []
 var action_queue: Array = []
 var is_battling: bool = false
 var index: int = 0
 @onready var choice: VBoxContainer = $"../CanvasLayer/choice"
+
+# The choices the enemy can make
+var enemy_moves: Array = ["Attack", "Shoot", "Defend", "Drink Potion", "Power Punch"]
 
 signal start_choose
 signal next_player
@@ -48,9 +53,26 @@ func _process(delta: float) -> void:
 func _action(stack):
 	_reset_focus()
 	emit_signal("start_attack")
+	
+	# --- PLAYER PHASE ---
 	for i in stack:
 		enemies[i].take_damage(1)
 		await get_tree().create_timer(1).timeout
+		
+	# --- ENEMY PHASE ---
+	for enemy in enemies:
+		var chosen_move = "Attack" # Hardcoded for now. Later: enemy_moves.pick_random()
+		print("Enemy uses: ", chosen_move)
+		
+		# Ensure we have a reference to the player group and that there are players alive
+		if player_group and player_group.players.size() > 0:
+			# RNG: Pick a random player to attack
+			var random_target = player_group.players.pick_random()
+			random_target.take_damage(1)
+			
+		# Wait 1 second between enemy attacks for game feel
+		await get_tree().create_timer(1).timeout
+		
 	action_queue.clear()
 	is_battling = false
 	

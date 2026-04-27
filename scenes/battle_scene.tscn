@@ -18,8 +18,9 @@ scale = Vector2(21.345, 21.345)
 texture = ExtResource("1_kinr6")
 expand_mode = 3
 
-[node name="EnemyGroup" parent="." unique_id=919007267 instance=ExtResource("1_idkgt")]
+[node name="EnemyGroup" parent="." unique_id=919007267 node_paths=PackedStringArray("player_group") instance=ExtResource("1_idkgt")]
 position = Vector2(816, 209)
+player_group = NodePath("../PlayerGroup")
 
 [node name="PlayerGroup" parent="." unique_id=57050628 instance=ExtResource("3_rca61")]
 position = Vector2(313, 206)
