@@ -10,7 +10,8 @@ var index: int = 0
 @onready var action_text: Label = $"../CanvasLayer/ActionText" # Reference to our new UI
 
 # The choices the enemy can make
-var enemy_moves: Array = ["Attack", "Shoot", "Defend", "Drink Potion", "Power Punch"]
+#var enemy_moves: Array = ["Attack", "Shoot", "Defend", "Drink Potion", "Power Punch"]
+var enemy_moves: Array = ["Attack", "Defend"]
 
 signal start_choose
 signal next_player
@@ -38,25 +39,29 @@ func _process(delta: float) -> void:
 			if enemies[index].is_dead:
 				return
 				
-			#enemies[index].take_damage(1)
-			action_queue.push_back(index)
+			# Push a DICTIONARY now, so we know what move was used and the target
+			action_queue.push_back({"move": "Attack", "target": index})
 			emit_signal("next_player")
 			
-			# Count how many players are actually alive
-			var alive_players_count = 0
-			if player_group:
-				for p in player_group.players:
-					if not p.is_dead:
-						alive_players_count += 1
-			
-			# Note: We now check against alive players instead of enemies.size()
-			if action_queue.size() == alive_players_count and not is_battling:
-				is_battling = true
-				_action(action_queue)
-			elif not is_battling:
-				# If not all players have chosen, show the menu for the next player!
-				_reset_focus()
-				show_choice()
+			_check_action_queue()
+
+# Helper function to check if everyone has selected a move
+func _check_action_queue():
+	# Count how many players are actually alive
+	var alive_players_count = 0
+	if player_group:
+		for p in player_group.players:
+			if not p.is_dead:
+				alive_players_count += 1
+	
+	# Note: We now check against alive players instead of enemies.size()
+	if action_queue.size() == alive_players_count and not is_battling:
+		is_battling = true
+		_action(action_queue)
+	elif not is_battling:
+		# If not all players have chosen, show the menu for the next player!
+		_reset_focus()
+		show_choice()
 
 # Helper to skip dead enemies when pressing up/down
 func _move_enemy_focus(direction: int):
@@ -79,6 +84,28 @@ func _action(stack):
 	_reset_focus()
 	emit_signal("start_attack")
 	
+	# --- PRE-ROUND SETUP PHASE ---
+	
+	# 1. Pre-roll enemy moves so they can raise their shields early
+	var enemy_chosen_moves = []
+	for enemy in enemies:
+		if enemy.is_dead:
+			enemy_chosen_moves.append("Skip")
+		else:
+			var move = enemy_moves.pick_random()
+			enemy_chosen_moves.append(move)
+			if move == "Defend":
+				enemy.defend() # Enemy shield up immediately!
+				
+	# 2. Look through player moves and raise shields early
+	var setup_player_idx = 0
+	for i in player_group.players.size():
+		if not player_group.players[i].is_dead:
+			var action = stack[setup_player_idx]
+			if action.move == "Defend":
+				player_group.players[i].defend() # Player shield up immediately!
+			setup_player_idx += 1
+	
 	# --- PLAYER PHASE ---
 	var acting_player_idx = 0
 	for i in player_group.players.size():
@@ -86,16 +113,21 @@ func _action(stack):
 		if player_group.players[i].is_dead:
 			continue
 			
-		var target_enemy_idx = stack[acting_player_idx]
-		
+		var action = stack[acting_player_idx]
 		var player_name = "Player " + str(i + 1)
-		var target_enemy_name = "Enemy " + str(target_enemy_idx + 1)
-		var move_name = "Attack" # Hardcoded to attack until menu buttons are added
 		
-		_show_action_text(player_name, move_name, target_enemy_name)
-		enemies[target_enemy_idx].take_damage(1)
+		if action.move == "Attack":
+			var target_enemy_idx = action.target
+			var target_enemy_name = "Enemy " + str(target_enemy_idx + 1)
+			
+			_show_action_text(player_name, action.move, target_enemy_name)
+			enemies[target_enemy_idx].take_damage(1)
+			
+		elif action.move == "Defend":
+			_show_action_text(player_name, action.move, "")
+			# Shield was already raised in Pre-Round Setup, just wait a moment
+			
 		await get_tree().create_timer(1).timeout
-		
 		acting_player_idx += 1
 		
 	# --- ENEMY PHASE ---
@@ -106,31 +138,43 @@ func _action(stack):
 			enemy_idx += 1
 			continue
 			
-		var chosen_move = "Attack" # Hardcoded for now. Later: enemy_moves.pick_random()
+		# Pull from the pre-rolled moves we created in the Setup Phase
+		var chosen_move = enemy_chosen_moves[enemy_idx] 
 		var enemy_name = "Enemy " + str(enemy_idx + 1)
 		
-		# Get only the ALIVE players
-		var alive_players = []
-		if player_group:
-			for p in player_group.players:
-				if not p.is_dead:
-					alive_players.append(p)
-		
-		# Ensure there are players alive before attacking
-		if alive_players.size() > 0:
-			# RNG: Pick a random ALIVE player to attack
-			var random_target = alive_players.pick_random()
+		if chosen_move == "Attack":
+			# Get only the ALIVE players
+			var alive_players = []
+			if player_group:
+				for p in player_group.players:
+					if not p.is_dead:
+						alive_players.append(p)
 			
-			# Find which player number this is for the text feed
-			var target_idx = player_group.players.find(random_target)
-			var target_player_name = "Player " + str(target_idx + 1)
-			
-			_show_action_text(enemy_name, chosen_move, target_player_name)
-			random_target.take_damage(1)
+			# Ensure there are players alive before attacking
+			if alive_players.size() > 0:
+				# RNG: Pick a random ALIVE player to attack
+				var random_target = alive_players.pick_random()
+				
+				# Find which player number this is for the text feed
+				var target_idx = player_group.players.find(random_target)
+				var target_player_name = "Player " + str(target_idx + 1)
+				
+				_show_action_text(enemy_name, chosen_move, target_player_name)
+				random_target.take_damage(1)
+		elif chosen_move == "Defend":
+			_show_action_text(enemy_name, chosen_move, "")
+			# Shield was already raised in Pre-Round Setup, just wait a moment
 			
 		# Wait 1 second between enemy attacks for game feel
 		await get_tree().create_timer(1).timeout
 		enemy_idx += 1
+		
+	# End of Round: Reset all unused defenses
+	if player_group:
+		for p in player_group.players:
+			p.reset_defend()
+	for enemy in enemies:
+		enemy.reset_defend()
 		
 	action_queue.clear()
 	is_battling = false
@@ -202,10 +246,14 @@ func _start_choosing():
 			enemies[i].focus()
 			break
 
-	# REMOVED: emit_signal("start_choose") 
-	# (Emitting it here kept overriding the turn back to Player 0)
-
-
 func _on_attack_pressed() -> void:
 	choice.hide()
 	_start_choosing()
+
+# NEW FUNCTION: Connect your "Defend" button to this signal!
+func _on_defend_pressed() -> void:
+	choice.hide()
+	# Pushing Defend immediately locks the turn, no need to select a target! (-1 is a placeholder target)
+	action_queue.push_back({"move": "Defend", "target": -1})
+	emit_signal("next_player")
+	_check_action_queue()

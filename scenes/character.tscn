@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dj3h1sxmc7kyh" path="res://scripts/character.gd" id="1_lrhn5"]
 [ext_resource type="Texture2D" uid="uid://dt66tchlvhuvm" path="res://assets/cursor/link3.png" id="2_lrhn5"]
 [ext_resource type="Texture2D" uid="uid://dx6n8kyoo7tij" path="res://assets/playergroup/Wizard/Idle.png" id="2_my7n2"]
+[ext_resource type="Texture2D" uid="uid://dr2baw1rsad0m" path="res://assets/moves/shield.png" id="4_my7n2"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_rkhd4"]
 
@@ -132,3 +133,9 @@ shape = SubResource("CircleShape2D_rkhd4")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=32323422]
 libraries/ = SubResource("AnimationLibrary_dp8ca")
+
+[node name="Shield" type="Sprite2D" parent="." unique_id=1835533171]
+visible = false
+position = Vector2(19.765, -28.74)
+scale = Vector2(2.515, 2.515)
+texture = ExtResource("4_my7n2")

@@ -3,10 +3,12 @@ extends CharacterBody2D
 @onready var _focus: Sprite2D = $focus
 @onready var progress_bar: ProgressBar = $ProgressBar
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var shield: Sprite2D = $Shield # Make sure you added this node!
 
 @export var MAX_HEALTH: float = 7
 
 var is_dead: bool = false # Add variable to track if the character is dead
+var is_defending: bool = false # Add variable to track if they are blocking
 
 var health: float = 3:
 	set(value):
@@ -36,10 +38,27 @@ func focus():
 func unfocus():
 	_focus.hide()
 	
+# New Helper Functions for Defending
+func defend():
+	is_defending = true
+	if shield:
+		shield.show()
+
+func reset_defend():
+	is_defending = false
+	if shield:
+		shield.hide()
+	
 func take_damage(value):
 	# If they are already dead, ignore any further damage
 	if is_dead:
 		return
+		
+	# Check if they are defending
+	if is_defending:
+		is_defending = false # They can only block ONE attack
+		reset_defend()       # Hide the shield immediately
+		return               # Exit the function early so NO damage is taken!
 		
 	# Check if this attack WILL kill them BEFORE changing the health
 	# This ensures the setter plays the correct animation!

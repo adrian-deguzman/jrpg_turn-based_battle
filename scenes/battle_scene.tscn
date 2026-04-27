@@ -73,3 +73,4 @@ vertical_alignment = 1
 [connection signal="start_attack" from="EnemyGroup" to="PlayerGroup" method="_on_enemy_group_start_attack"]
 [connection signal="start_choose" from="EnemyGroup" to="PlayerGroup" method="_on_enemy_group_start_choose"]
 [connection signal="pressed" from="CanvasLayer/choice/Attack" to="EnemyGroup" method="_on_attack_pressed"]
+[connection signal="pressed" from="CanvasLayer/choice/Defend" to="EnemyGroup" method="_on_defend_pressed"]

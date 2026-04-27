@@ -23,6 +23,9 @@ position = Vector2(2, -73)
 scale = Vector2(2, 2)
 texture = ExtResource("3_02kwl")
 
+[node name="Shield" parent="Character" index="6" unique_id=1835533171]
+position = Vector2(19.765, -56.19)
+
 [node name="Character2" parent="." unique_id=1395226398 instance=ExtResource("2_02kwl")]
 
 [node name="Sprite2D" parent="Character2" index="1" unique_id=798288966]
@@ -35,6 +38,9 @@ position = Vector2(2, -73)
 scale = Vector2(2, 2)
 texture = ExtResource("3_02kwl")
 
+[node name="Shield" parent="Character2" index="6" unique_id=1835533171]
+position = Vector2(19.765, -56.19)
+
 [node name="Character3" parent="." unique_id=2122565170 instance=ExtResource("2_02kwl")]
 
 [node name="Sprite2D" parent="Character3" index="1" unique_id=798288966]
@@ -46,6 +52,9 @@ modulate = Color(1, 0.41000003, 0.41000003, 0.8156863)
 position = Vector2(2, -73)
 scale = Vector2(2, 2)
 texture = ExtResource("3_02kwl")
+
+[node name="Shield" parent="Character3" index="6" unique_id=1835533171]
+position = Vector2(19.765, -56.19)
 
 [editable path="Character"]
 [editable path="Character2"]
