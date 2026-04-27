@@ -33,6 +33,18 @@ tracks/1/keys = {
 "update": 0,
 "values": [Color(1, 1, 1, 1)]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Shield:self_modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
 
 [sub_resource type="Animation" id="Animation_2cgup"]
 resource_name = "death"
@@ -48,6 +60,22 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0.4509804), Color(1, 1, 1, 1), Color(1, 1, 1, 0.4509804), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_a5ia6"]
+resource_name = "defense"
+length = 1.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Shield:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.40000004, 0.8, 1, 1.2, 1.4000001, 1.6000001, 1.8000002),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(4.624679, 4.624679, 4.624679, 1), Color(4.624679, 4.624679, 4.624679, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_my7n2"]
@@ -89,6 +117,7 @@ tracks/0/keys = {
 _data = {
 &"RESET": SubResource("Animation_lrhn5"),
 &"death": SubResource("Animation_2cgup"),
+&"defense": SubResource("Animation_a5ia6"),
 &"hurt": SubResource("Animation_my7n2"),
 &"idle": SubResource("Animation_dp8ca"),
 &"idle_2": SubResource("Animation_0lw5n")

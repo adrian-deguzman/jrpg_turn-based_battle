@@ -42,6 +42,11 @@ func unfocus():
 func defend():
 	is_defending = true
 	if shield:
+		# Godot's AnimationPlayer leaves properties exactly how they were 
+		# at the end of the animation. We must reset the color and alpha 
+		# just in case the "defense" animation faded it out!
+		shield.modulate = Color(1, 1, 1, 1)
+		shield.self_modulate = Color(1, 1, 1, 1)
 		shield.show()
 
 func reset_defend():
@@ -57,7 +62,10 @@ func take_damage(value):
 	# Check if they are defending
 	if is_defending:
 		is_defending = false # They can only block ONE attack
-		reset_defend()       # Hide the shield immediately
+		
+		# Play your custom animation instead of instantly hiding the shield!
+		animation_player.play("defense") 
+		
 		return               # Exit the function early so NO damage is taken!
 		
 	# Check if this attack WILL kill them BEFORE changing the health

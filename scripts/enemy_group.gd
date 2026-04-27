@@ -127,7 +127,12 @@ func _action(stack):
 			_show_action_text(player_name, action.move, "")
 			# Shield was already raised in Pre-Round Setup, just wait a moment
 			
-		await get_tree().create_timer(1).timeout
+		await get_tree().create_timer(2).timeout
+		# Hide the text
+		action_text.hide()
+		# Wait 0.5 seconds as a gap before the next turn
+		await get_tree().create_timer(0.5).timeout
+		
 		acting_player_idx += 1
 		
 	# --- ENEMY PHASE ---
@@ -165,8 +170,12 @@ func _action(stack):
 			_show_action_text(enemy_name, chosen_move, "")
 			# Shield was already raised in Pre-Round Setup, just wait a moment
 			
-		# Wait 1 second between enemy attacks for game feel
-		await get_tree().create_timer(1).timeout
+		# Wait 2 second between enemy attacks for game feel
+		await get_tree().create_timer(2).timeout
+		# Hide the text
+		action_text.hide()
+		# Wait 0.5 seconds as a gap before the next turn
+		await get_tree().create_timer(0.5).timeout
 		enemy_idx += 1
 		
 	# End of Round: Reset all unused defenses
