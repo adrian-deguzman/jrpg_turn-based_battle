@@ -212,6 +212,7 @@ scale = Vector2(2.515, 2.515)
 texture = ExtResource("4_my7n2")
 
 [node name="Potion" type="Sprite2D" parent="." unique_id=1019386115]
+visible = false
 position = Vector2(61, -62)
 scale = Vector2(1.47, 1.47)
 texture = ExtResource("5_dp8ca")

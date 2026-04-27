@@ -8,6 +8,9 @@ var is_battling: bool = false
 var index: int = 0
 var wait_time: int = 2.5
 
+# NEW: Tracks which targeted move we selected from the menu (Attack vs Shoot)
+var current_selected_move: String = "Attack" 
+
 @onready var choice: VBoxContainer = $"../CanvasLayer/choice"
 @onready var action_text: Label = $"../CanvasLayer/ActionText" # Reference to our new UI
 
@@ -18,7 +21,7 @@ var wait_time: int = 2.5
 
 # The choices the enemy can make
 #var enemy_moves: Array = ["Attack", "Shoot", "Defend", "Drink Potion", "Power Punch"]
-var enemy_moves: Array = ["Attack", "Defend", "Drink Potion"] # Added Drink Potion for enemies
+var enemy_moves: Array = ["Attack", "Defend", "Drink Potion", "Shoot"] # Added Shoot for enemies
 
 signal start_choose
 signal next_player
@@ -46,8 +49,8 @@ func _process(delta: float) -> void:
 			if enemies[index].is_dead:
 				return
 				
-			# Push a DICTIONARY now, so we know what move was used and the target
-			action_queue.push_back({"move": "Attack", "target": index})
+			# Push the specific move we selected from the UI menu, instead of hardcoding "Attack"
+			action_queue.push_back({"move": current_selected_move, "target": index})
 			emit_signal("next_player")
 			
 			_check_action_queue()
@@ -162,6 +165,17 @@ func _action(stack):
 			_show_action_text(player_name, action.move, target_enemy_name)
 			enemies[target_enemy_idx].take_damage(1)
 			
+		elif action.move == "Shoot":
+			var target_enemy_idx = action.target
+			var target_enemy_name = "Enemy " + str(target_enemy_idx + 1)
+			
+			# RNG: 50% chance to miss
+			var is_hit = randf() <= 0.5 
+			_show_action_text(player_name, action.move, target_enemy_name, is_hit)
+			
+			if is_hit:
+				enemies[target_enemy_idx].take_damage(2.5)
+			
 		elif action.move == "Defend":
 			_show_action_text(player_name, action.move, "")
 			# Shield was already raised in Pre-Round Setup, just wait a moment
@@ -214,6 +228,25 @@ func _action(stack):
 				_show_action_text(enemy_name, chosen_move, target_player_name)
 				random_target.take_damage(1)
 				
+		elif chosen_move == "Shoot":
+			var alive_players = []
+			if player_group:
+				for p in player_group.players:
+					if not p.is_dead:
+						alive_players.append(p)
+						
+			if alive_players.size() > 0:
+				var random_target = alive_players.pick_random()
+				var target_idx = player_group.players.find(random_target)
+				var target_player_name = "Player " + str(target_idx + 1)
+				
+				# RNG: 50% chance to miss
+				var is_hit = randf() <= 0.5 
+				_show_action_text(enemy_name, chosen_move, target_player_name, is_hit)
+				
+				if is_hit:
+					random_target.take_damage(2.5)
+				
 		elif chosen_move == "Defend":
 			_show_action_text(enemy_name, chosen_move, "")
 			# Shield was already raised in Pre-Round Setup, just wait a moment
@@ -247,13 +280,17 @@ func _action(stack):
 	show_choice()
 
 # Helper function to generate the text based on the move used
-func _show_action_text(actor: String, move: String, target: String):
+# NEW: Added an optional 'is_hit' parameter so we can tell the player if they missed
+func _show_action_text(actor: String, move: String, target: String, is_hit: bool = true):
 	action_text.show()
 	
 	if move == "Attack":
 		action_text.text = actor + " attacked " + target
 	elif move == "Shoot":
-		action_text.text = actor + " shot " + target
+		if is_hit:
+			action_text.text = actor + " shot " + target + " for 2.5 damage!"
+		else:
+			action_text.text = actor + " shot at " + target + " but missed!"
 	elif move == "Drink Potion":
 		action_text.text = actor + " drank potion"
 	elif move == "Defend":
@@ -310,10 +347,16 @@ func _start_choosing():
 			break
 
 func _on_attack_pressed() -> void:
+	current_selected_move = "Attack" # Lock in our choice
 	choice.hide()
 	_start_choosing()
 
-# NEW FUNCTION: Connect your "Defend" button to this signal!
+# NEW FUNCTION: Connect your "Shoot" button to this signal!
+func _on_shoot_pressed() -> void:
+	current_selected_move = "Shoot" # Lock in our choice
+	choice.hide()
+	_start_choosing()
+
 func _on_defend_pressed() -> void:
 	choice.hide()
 	# Pushing Defend immediately locks the turn, no need to select a target! (-1 is a placeholder target)
@@ -321,13 +364,12 @@ func _on_defend_pressed() -> void:
 	emit_signal("next_player")
 	_check_action_queue()
 
-# NEW FUNCTION: Connect your "Drink Potion" button to this signal!
 func _on_drink_potion_pressed() -> void:
 	choice.hide()
 	action_queue.push_back({"move": "Drink Potion", "target": -1})
 	emit_signal("next_player")
 	_check_action_queue()
 
-# NEW FUNCTION: Reloads the entire scene to reset the game to its starting state!
+# Reloads the entire scene to reset the game to its starting state!
 func _on_restart_button_pressed() -> void:
 	get_tree().reload_current_scene()
