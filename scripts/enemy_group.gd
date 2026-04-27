@@ -171,6 +171,7 @@ func _action(stack):
 			var target_enemy_name = "Enemy " + str(target_enemy_idx + 1)
 			
 			_show_action_text(player_name, action.move, target_enemy_name)
+			player_group.players[i].play_punch_animation() # Player punches
 			enemies[target_enemy_idx].take_damage(1)
 			
 		elif action.move == "Shoot":
@@ -182,6 +183,7 @@ func _action(stack):
 			_show_action_text(player_name, action.move, target_enemy_name, is_hit)
 			
 			if is_hit:
+				player_group.players[i].play_punch_animation() # Player punches ONLY on a hit
 				enemies[target_enemy_idx].take_damage(2.5)
 				
 		elif action.move == "Power Punch":
@@ -189,7 +191,7 @@ func _action(stack):
 			var target_enemy_idx = action.target
 			player_charging_targets[i] = target_enemy_idx # Save target for next round
 			_show_action_text(player_name, "Power Punch Charge", "")
-			player_group.players[i].play_charge_animation() # <--- ADD THIS LINE
+			player_group.players[i].play_charge_animation() 
 			
 		elif action.move == "Power Punch Launch":
 			# NEW: Launch Phase
@@ -198,6 +200,8 @@ func _action(stack):
 			var target_enemy_name = "Enemy " + str(target_enemy_idx + 1)
 			
 			_show_action_text(player_name, "Power Punch Launch", target_enemy_name)
+			player_group.players[i].stop_charge_animation()
+			player_group.players[i].play_punch_animation() # Player punches on launch
 			enemies[target_enemy_idx].take_damage(2.5) # Sure hit 2.5!
 			
 		elif action.move == "Defend":
@@ -250,6 +254,7 @@ func _action(stack):
 				var target_player_name = "Player " + str(target_idx + 1)
 				
 				_show_action_text(enemy_name, chosen_move, target_player_name)
+				enemy.play_punch_animation() # Enemy punches
 				random_target.take_damage(1)
 				
 		elif chosen_move == "Shoot":
@@ -269,6 +274,7 @@ func _action(stack):
 				_show_action_text(enemy_name, chosen_move, target_player_name, is_hit)
 				
 				if is_hit:
+					enemy.play_punch_animation() # Enemy punches ONLY on a hit
 					random_target.take_damage(2.5)
 					
 		elif chosen_move == "Power Punch":
@@ -283,7 +289,7 @@ func _action(stack):
 				var target_idx = player_group.players.find(random_target)
 				enemy_charging_targets[enemy_idx] = target_idx # Save target for next round
 				_show_action_text(enemy_name, "Power Punch Charge", "")
-				enemy.play_charge_animation() # <--- ADD THIS LINE
+				enemy.play_charge_animation() 
 				
 		elif chosen_move == "Power Punch Launch":
 			# NEW: Enemy Launch Phase
@@ -291,6 +297,8 @@ func _action(stack):
 			enemy_charging_targets.erase(enemy_idx)
 			var target_player_name = "Player " + str(target_idx + 1)
 			_show_action_text(enemy_name, "Power Punch Launch", target_player_name)
+			enemy.stop_charge_animation()
+			enemy.play_punch_animation() # Enemy punches on launch
 			player_group.players[target_idx].take_damage(2.5) # Sure hit 2.5!
 				
 		elif chosen_move == "Defend":

@@ -139,3 +139,8 @@ func play_charge_animation():
 func stop_charge_animation():
 	if not is_dead:
 		animation_player.play("idle") # Return to idle to stop levitating!
+
+# NEW: Helper function to play the punch animation
+func play_punch_animation():
+	if not is_dead:
+		animation_player.play("punch")

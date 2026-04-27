@@ -26,6 +26,18 @@ tracks/0/keys = {
 "update": 1,
 "values": [0]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(2, 2)]
+}
 
 [sub_resource type="Animation" id="Animation_2hyy3"]
 resource_name = "charge"
@@ -174,6 +186,22 @@ tracks/0/keys = {
 "values": [0, 1, 2, 3]
 }
 
+[sub_resource type="Animation" id="Animation_irmqu"]
+resource_name = "punch"
+length = 1.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(2, 2), Vector2(2.29, 2.29), Vector2(2, 2)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_dp8ca"]
 _data = {
 &"RESET": SubResource("Animation_lrhn5"),
@@ -183,7 +211,8 @@ _data = {
 &"heal": SubResource("Animation_0dpix"),
 &"hurt": SubResource("Animation_my7n2"),
 &"idle": SubResource("Animation_dp8ca"),
-&"idle_2": SubResource("Animation_0lw5n")
+&"idle_2": SubResource("Animation_0lw5n"),
+&"punch": SubResource("Animation_irmqu")
 }
 
 [node name="Character" type="CharacterBody2D" unique_id=1830078391]
