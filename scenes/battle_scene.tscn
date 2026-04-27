@@ -59,6 +59,16 @@ text = "Drink Potion"
 layout_mode = 2
 text = "Power Punch"
 
+[node name="ActionText" type="Label" parent="CanvasLayer" unique_id=1396912143]
+visible = false
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [connection signal="next_player" from="EnemyGroup" to="PlayerGroup" method="_on_enemy_group_next_player"]
 [connection signal="start_attack" from="EnemyGroup" to="PlayerGroup" method="_on_enemy_group_start_attack"]
 [connection signal="start_choose" from="EnemyGroup" to="PlayerGroup" method="_on_enemy_group_start_choose"]

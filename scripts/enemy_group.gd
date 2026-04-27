@@ -7,6 +7,7 @@ var action_queue: Array = []
 var is_battling: bool = false
 var index: int = 0
 @onready var choice: VBoxContainer = $"../CanvasLayer/choice"
+@onready var action_text: Label = $"../CanvasLayer/ActionText" # Reference to our new UI
 
 # The choices the enemy can make
 var enemy_moves: Array = ["Attack", "Shoot", "Defend", "Drink Potion", "Power Punch"]
@@ -55,23 +56,36 @@ func _action(stack):
 	emit_signal("start_attack")
 	
 	# --- PLAYER PHASE ---
-	for i in stack:
-		enemies[i].take_damage(1)
+	for i in stack.size():
+		var player_name = "Player " + str(i + 1)
+		var target_enemy_name = "Enemy " + str(stack[i] + 1)
+		var move_name = "Attack" # Hardcoded to attack until menu buttons are added
+		
+		_show_action_text(player_name, move_name, target_enemy_name)
+		enemies[stack[i]].take_damage(1)
 		await get_tree().create_timer(1).timeout
 		
 	# --- ENEMY PHASE ---
+	var enemy_idx = 0
 	for enemy in enemies:
 		var chosen_move = "Attack" # Hardcoded for now. Later: enemy_moves.pick_random()
-		print("Enemy uses: ", chosen_move)
+		var enemy_name = "Enemy " + str(enemy_idx + 1)
 		
 		# Ensure we have a reference to the player group and that there are players alive
 		if player_group and player_group.players.size() > 0:
 			# RNG: Pick a random player to attack
 			var random_target = player_group.players.pick_random()
+			
+			# Find which player number this is for the text feed
+			var target_idx = player_group.players.find(random_target)
+			var target_player_name = "Player " + str(target_idx + 1)
+			
+			_show_action_text(enemy_name, chosen_move, target_player_name)
 			random_target.take_damage(1)
 			
 		# Wait 1 second between enemy attacks for game feel
 		await get_tree().create_timer(1).timeout
+		enemy_idx += 1
 		
 	action_queue.clear()
 	is_battling = false
@@ -79,12 +93,30 @@ func _action(stack):
 	# Signal the start of a brand new round
 	emit_signal("start_choose")
 	show_choice()
+
+# Helper function to generate the text based on the move used
+func _show_action_text(actor: String, move: String, target: String):
+	action_text.show()
 	
+	if move == "Attack":
+		action_text.text = actor + " attacked " + target
+	elif move == "Shoot":
+		action_text.text = actor + " shot " + target
+	elif move == "Drink Potion":
+		action_text.text = actor + " drank potion"
+	elif move == "Defend":
+		action_text.text = actor + " defends themself."
+	elif move == "Power Punch":
+		# Note: The delayed 2-turn logic will need a state variable later, 
+		# but here is the text generation for the charge phase!
+		action_text.text = actor + " charges a punch..."
+
 func switch_focus(x, y):
 	enemies[x].focus()
 	enemies[y].unfocus()
 
 func show_choice():
+	action_text.hide() # Hide the battle text when it's time to choose
 	choice.show()
 	choice.find_child("Attack").grab_focus()
 
