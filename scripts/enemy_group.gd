@@ -6,6 +6,8 @@ var enemies: Array = []
 var action_queue: Array = []
 var is_battling: bool = false
 var index: int = 0
+var wait_time: int = 2.5
+
 @onready var choice: VBoxContainer = $"../CanvasLayer/choice"
 @onready var action_text: Label = $"../CanvasLayer/ActionText" # Reference to our new UI
 
@@ -16,7 +18,7 @@ var index: int = 0
 
 # The choices the enemy can make
 #var enemy_moves: Array = ["Attack", "Shoot", "Defend", "Drink Potion", "Power Punch"]
-var enemy_moves: Array = ["Attack", "Defend"]
+var enemy_moves: Array = ["Attack", "Defend", "Drink Potion"] # Added Drink Potion for enemies
 
 signal start_choose
 signal next_player
@@ -164,7 +166,11 @@ func _action(stack):
 			_show_action_text(player_name, action.move, "")
 			# Shield was already raised in Pre-Round Setup, just wait a moment
 			
-		await get_tree().create_timer(2).timeout
+		elif action.move == "Drink Potion":
+			_show_action_text(player_name, action.move, "")
+			player_group.players[i].heal(0.5) # Call the new heal function
+			
+		await get_tree().create_timer(wait_time).timeout
 		action_text.hide()
 		
 		# Check if the player's attack ended the game!
@@ -174,7 +180,8 @@ func _action(stack):
 		await get_tree().create_timer(0.5).timeout
 		
 		acting_player_idx += 1
-		
+	
+	await get_tree().create_timer(1.5).timeout
 	# --- ENEMY PHASE ---
 	var enemy_idx = 0
 	for enemy in enemies:
@@ -206,11 +213,16 @@ func _action(stack):
 				
 				_show_action_text(enemy_name, chosen_move, target_player_name)
 				random_target.take_damage(1)
+				
 		elif chosen_move == "Defend":
 			_show_action_text(enemy_name, chosen_move, "")
 			# Shield was already raised in Pre-Round Setup, just wait a moment
 			
-		await get_tree().create_timer(2).timeout
+		elif chosen_move == "Drink Potion":
+			_show_action_text(enemy_name, chosen_move, "")
+			enemy.heal(0.5) # Enemy heals themselves
+			
+		await get_tree().create_timer(wait_time).timeout
 		action_text.hide()
 		
 		# Check if the enemy's attack ended the game!
@@ -306,6 +318,13 @@ func _on_defend_pressed() -> void:
 	choice.hide()
 	# Pushing Defend immediately locks the turn, no need to select a target! (-1 is a placeholder target)
 	action_queue.push_back({"move": "Defend", "target": -1})
+	emit_signal("next_player")
+	_check_action_queue()
+
+# NEW FUNCTION: Connect your "Drink Potion" button to this signal!
+func _on_drink_potion_pressed() -> void:
+	choice.hide()
+	action_queue.push_back({"move": "Drink Potion", "target": -1})
 	emit_signal("next_player")
 	_check_action_queue()
 

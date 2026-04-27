@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dt66tchlvhuvm" path="res://assets/cursor/link3.png" id="2_lrhn5"]
 [ext_resource type="Texture2D" uid="uid://dx6n8kyoo7tij" path="res://assets/playergroup/Wizard/Idle.png" id="2_my7n2"]
 [ext_resource type="Texture2D" uid="uid://dr2baw1rsad0m" path="res://assets/moves/shield.png" id="4_my7n2"]
+[ext_resource type="Texture2D" uid="uid://bv7y8ljgi76wo" path="res://assets/moves/potion.png" id="5_dp8ca"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_rkhd4"]
 
@@ -28,18 +29,6 @@ tracks/1/path = NodePath("Sprite2D:self_modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 1)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Shield:self_modulate")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
@@ -76,6 +65,58 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 1), Color(4.624679, 4.624679, 4.624679, 1), Color(4.624679, 4.624679, 4.624679, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_0dpix"]
+resource_name = "heal"
+length = 2.2333333
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Potion:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.43333334, 0.8, 1.2, 1.4000001, 2.0666666),
+"transitions": PackedFloat32Array(4.924576, 1.0352639, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(61, -62), Vector2(47.435, -71.245), Vector2(14.35, -76.17), Vector2(14.349998, -76.17), Vector2(14.349998, -76.17), Vector2(121.48, -51)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Potion:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.2, 0.8, 1.2, 1.4000001, 2.0333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, -1.2130039, -1.712168, -1.712168, 3.5936329298563243]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Potion:self_modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(1.6090662, 1.9735677, 2.003326),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0.07547873), Color(1, 1, 1, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D:self_modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(1.3, 1.7091277, 2.0788743),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0, 1, 0.35686275, 1), Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_my7n2"]
@@ -118,6 +159,7 @@ _data = {
 &"RESET": SubResource("Animation_lrhn5"),
 &"death": SubResource("Animation_2cgup"),
 &"defense": SubResource("Animation_a5ia6"),
+&"heal": SubResource("Animation_0dpix"),
 &"hurt": SubResource("Animation_my7n2"),
 &"idle": SubResource("Animation_dp8ca"),
 &"idle_2": SubResource("Animation_0lw5n")
@@ -168,3 +210,8 @@ visible = false
 position = Vector2(19.765, -28.74)
 scale = Vector2(2.515, 2.515)
 texture = ExtResource("4_my7n2")
+
+[node name="Potion" type="Sprite2D" parent="." unique_id=1019386115]
+position = Vector2(61, -62)
+scale = Vector2(1.47, 1.47)
+texture = ExtResource("5_dp8ca")

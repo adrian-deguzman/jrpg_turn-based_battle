@@ -4,8 +4,9 @@ extends CharacterBody2D
 @onready var progress_bar: ProgressBar = $ProgressBar
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var shield: Sprite2D = $Shield # Make sure you added this node!
+@onready var potion: Sprite2D = $Potion # NEW: Make sure you added the Potion node!
 
-@export var MAX_HEALTH: float = 1
+@export var MAX_HEALTH: float = 3
 
 var is_dead: bool = false # Add variable to track if the character is dead
 var is_defending: bool = false # Add variable to track if they are blocking
@@ -15,7 +16,7 @@ var health: float = MAX_HEALTH:
 		# clampf ensures health never drops below 0 or goes above MAX_HEALTH
 		health = clampf(value, 0, MAX_HEALTH) 
 		_update_progress_bar()
-		_play_animation()
+		# REMOVED: _play_animation() from here so healing doesn't trigger "hurt"
 
 func _update_progress_bar():
 	progress_bar.value = (health / MAX_HEALTH) * 100
@@ -51,6 +52,28 @@ func reset_defend():
 	is_defending = false
 	if shield:
 		shield.hide()
+
+# NEW: Helper function for healing
+func heal(amount: float):
+	if is_dead:
+		return
+		
+	# Show the potion sprite
+	if potion:
+		potion.show()
+		
+	# Play the heal animation
+	animation_player.play("heal")
+	
+	# Wait a bit, then hide the potion
+	await get_tree().create_timer(2.0).timeout
+	
+	# Increase the health (the setter will automatically clamp it to MAX_HEALTH)
+	# Because we removed _play_animation() from the setter, this will no longer override "heal"!
+	health += amount 
+	
+	if potion:
+		potion.hide()
 	
 func take_damage(value):
 	# If they are already dead, ignore any further damage
@@ -67,10 +90,12 @@ func take_damage(value):
 		return               # Exit the function early so NO damage is taken!
 		
 	# Check if this attack WILL kill them BEFORE changing the health
-	# This ensures the setter plays the correct animation!
 	if health - value <= 0:
 		is_dead = true
 		unfocus() # Immediately hide the focus ring when they die
 		
-	# Now update the health, which triggers the setter and plays the animation
+	# Now update the health
 	health -= value
+	
+	# explicitly call the animation ONLY when taking damage!
+	_play_animation()
