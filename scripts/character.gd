@@ -11,6 +11,9 @@ extends CharacterBody2D
 var is_dead: bool = false # Add variable to track if the character is dead
 var is_defending: bool = false # Add variable to track if they are blocking
 
+# NEW: We need to store the unique fill style for this character
+var fill_style: StyleBoxFlat 
+
 var health: float = MAX_HEALTH:
 	set(value):
 		# clampf ensures health never drops below 0 or goes above MAX_HEALTH
@@ -18,8 +21,35 @@ var health: float = MAX_HEALTH:
 		_update_progress_bar()
 		# REMOVED: _play_animation() from here so healing doesn't trigger "hurt"
 
+# NEW: Initialize unique colors when the character spawns
+func _ready() -> void:
+	# Create a unique copy of the fill style for THIS specific character
+	# so that changing one enemy's health bar color doesn't change everyone's!
+	var default_style = progress_bar.get_theme_stylebox("fill")
+	if default_style is StyleBoxFlat:
+		fill_style = default_style.duplicate()
+	else:
+		fill_style = StyleBoxFlat.new()
+		
+	# Apply this unique style to our progress bar
+	progress_bar.add_theme_stylebox_override("fill", fill_style)
+	_update_progress_bar()
+
 func _update_progress_bar():
-	progress_bar.value = (health / MAX_HEALTH) * 100
+	var percentage = (health / MAX_HEALTH) * 100
+	progress_bar.value = percentage
+	
+	# NEW: Change color based on percentage thresholds
+	if fill_style:
+		if percentage >= 68:
+			# Emerald/Forest Green (Vitality)
+			fill_style.bg_color = Color("#2d5a27") 
+		elif percentage >= 35:
+			# Amber/Ochre (Caution)
+			fill_style.bg_color = Color("#b58b00")
+		else:
+			# Crimson/Blood Red (Critical)
+			fill_style.bg_color = Color("#8b0000")
 
 func _play_animation():
 	if is_dead:
@@ -104,3 +134,8 @@ func take_damage(value):
 func play_charge_animation():
 	if not is_dead:
 		animation_player.play("charge")
+
+# NEW: Helper function to stop charging (Added from previous fix!)
+func stop_charge_animation():
+	if not is_dead:
+		animation_player.play("idle") # Return to idle to stop levitating!
