@@ -60,10 +60,10 @@ layout_mode = 2
 text = "Power Punch"
 
 [node name="ActionText" type="Label" parent="CanvasLayer" unique_id=1396912143]
-visible = false
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 23.0
+offset_top = 6.825
+offset_bottom = 40.825
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 24
 horizontal_alignment = 1

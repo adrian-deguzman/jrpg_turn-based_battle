@@ -116,7 +116,12 @@ func switch_focus(x, y):
 	enemies[y].unfocus()
 
 func show_choice():
-	action_text.hide() # Hide the battle text when it's time to choose
+	# action_text.hide() # REMOVED: We now use this to show whose turn it is
+	action_text.show()
+	
+	var current_player_num = action_queue.size() + 1
+	action_text.text = "(Choose move for Player " + str(current_player_num) + ")"
+	
 	choice.show()
 	choice.find_child("Attack").grab_focus()
 
@@ -127,6 +132,11 @@ func _reset_focus():
 
 func _start_choosing():
 	_reset_focus()
+	
+	# Update text to reflect targeting phase
+	var current_player_num = action_queue.size() + 1
+	action_text.text = "(Choose target for Player " + str(current_player_num) + ")"
+	
 	# REMOVED: emit_signal("start_choose") 
 	# (Emitting it here kept overriding the turn back to Player 0)
 	enemies[0].focus()	
