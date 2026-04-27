@@ -12,6 +12,10 @@ func _ready() -> void:
 		players[i].position = Vector2(0, i*180)
 		
 		#players[0].focus()
+	
+	# Give focus to the first player right when the scene loads
+	if players.size() > 0:
+		players[0].focus()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -33,6 +37,10 @@ func switch_focus(x, y):
 
 
 func _on_enemy_group_start_choose() -> void:
+	# Reset back to Player 0 for a brand new round
+	index = 0
+	for p in players:
+		p.unfocus()
 	players[0].focus()
 	battle_start = false
 

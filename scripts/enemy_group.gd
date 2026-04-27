@@ -17,7 +17,7 @@ func _ready() -> void:
 		enemies[i].position = Vector2(0, i*180)
 		
 		#enemies[0].focus()
-		show_choice()
+	show_choice()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -35,11 +35,16 @@ func _process(delta: float) -> void:
 			#enemies[index].take_damage(1)
 			action_queue.push_back(index)
 			emit_signal("next_player")
+			
+			# Note: Using enemies.size() assumes player party size is equal to enemy party size.
+			if action_queue.size() == enemies.size() and not is_battling:
+				is_battling = true
+				_action(action_queue)
+			elif not is_battling:
+				# If not all players have chosen, show the menu for the next player!
+				_reset_focus()
+				show_choice()
 	
-	if action_queue.size() == enemies.size() and not is_battling:
-		is_battling = true
-		_action(action_queue)
-		
 func _action(stack):
 	_reset_focus()
 	emit_signal("start_attack")
@@ -48,6 +53,9 @@ func _action(stack):
 		await get_tree().create_timer(1).timeout
 	action_queue.clear()
 	is_battling = false
+	
+	# Signal the start of a brand new round
+	emit_signal("start_choose")
 	show_choice()
 	
 func switch_focus(x, y):
@@ -65,7 +73,8 @@ func _reset_focus():
 
 func _start_choosing():
 	_reset_focus()
-	emit_signal("start_choose")
+	# REMOVED: emit_signal("start_choose") 
+	# (Emitting it here kept overriding the turn back to Player 0)
 	enemies[0].focus()	
 
 
