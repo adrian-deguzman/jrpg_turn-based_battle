@@ -3,35 +3,35 @@ extends CharacterBody2D
 @onready var _focus: Sprite2D = $focus
 @onready var progress_bar: ProgressBar = $ProgressBar
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
-@onready var shield: Sprite2D = $Shield # Make sure you added this node!
-@onready var potion: Sprite2D = $Potion # NEW: Make sure you added the Potion node!
+@onready var shield: Sprite2D = $Shield
+@onready var potion: Sprite2D = $Potion
 
 @export var MAX_HEALTH: float = 3
 
-var is_dead: bool = false # Add variable to track if the character is dead
-var is_defending: bool = false # Add variable to track if they are blocking
+var is_dead: bool = false # tracks if dead for win/loss
+var is_defending: bool = false # tracks block
 
-# NEW: We need to store the unique fill style for this character
+# health bar style
 var fill_style: StyleBoxFlat 
 
 var health: float = MAX_HEALTH:
 	set(value):
-		# clampf ensures health never drops below 0 or goes above MAX_HEALTH
+		# keeps health from 0-100
 		health = clampf(value, 0, MAX_HEALTH) 
 		_update_progress_bar()
-		# REMOVED: _play_animation() from here so healing doesn't trigger "hurt"
+		# 
 
-# NEW: Initialize unique colors when the character spawns
+# setups health bar colors
 func _ready() -> void:
-	# Create a unique copy of the fill style for THIS specific character
-	# so that changing one enemy's health bar color doesn't change everyone's!
+	# creates unique stylebox
+	# prevents coloring all enemies at once
 	var default_style = progress_bar.get_theme_stylebox("fill")
 	if default_style is StyleBoxFlat:
 		fill_style = default_style.duplicate()
 	else:
 		fill_style = StyleBoxFlat.new()
 		
-	# Apply this unique style to our progress bar
+	# applies unique style
 	progress_bar.add_theme_stylebox_override("fill", fill_style)
 	_update_progress_bar()
 
@@ -39,16 +39,16 @@ func _update_progress_bar():
 	var percentage = (health / MAX_HEALTH) * 100
 	progress_bar.value = percentage
 	
-	# NEW: Change color based on percentage thresholds
+	# changes color based on percentage
 	if fill_style:
 		if percentage >= 68:
-			# Emerald/Forest Green (Vitality)
+			# green for high health
 			fill_style.bg_color = Color("#2d5a27") 
 		elif percentage >= 35:
-			# Amber/Ochre (Caution)
+			# yellow for mid health
 			fill_style.bg_color = Color("#b58b00")
 		else:
-			# Crimson/Blood Red (Critical)
+			# red for low health
 			fill_style.bg_color = Color("#8b0000")
 
 func _play_animation():
@@ -59,21 +59,21 @@ func _play_animation():
 		
 	else:
 		animation_player.play("hurt")
-		#animation_player.queue("idle")
+
 	
 func focus():
-	# Only allow the focus ring to appear if the character is still alive
+	# shows focus ring if alive
 	if not is_dead:
 		_focus.show()
 
 func unfocus():
 	_focus.hide()
 	
-# New Helper Functions for Defending
+# defend command logic
 func defend():
 	is_defending = true
 	if shield:
-		# reset the shield after "defense" animation
+		# resets shield color
 		shield.modulate = Color(1, 1, 1, 1)
 		shield.self_modulate = Color(1, 1, 1, 1)
 		shield.show()
@@ -83,83 +83,82 @@ func reset_defend():
 	if shield:
 		shield.hide()
 
-# NEW: Helper function for healing
+# item command for healing
 func heal(amount: float):
 	if is_dead:
 		return
 		
-	# Show the potion sprite
+	# shows potion
 	if potion:
 		potion.show()
 		
-	# Play the heal animation
+	# plays heal anim
 	animation_player.play("heal")
 	
-	# Wait a bit, then hide the potion
+	# waits before hiding
 	await get_tree().create_timer(2.0).timeout
 	
-	# Increase the health (the setter will automatically clamp it to MAX_HEALTH)
-	# Because we removed _play_animation() from the setter, this will no longer override "heal"!
+	# adds health
 	health += amount 
 	
 	if potion:
 		potion.hide()
 	
 func take_damage(value):
-	# If they are already dead, ignore any further damage
+	# ignores damage if dead
 	if is_dead:
 		return
 		
-	# Check if they are defending
+	# checks if defending
 	if is_defending:
-		is_defending = false # They can only block ONE attack
+		is_defending = false # blocks one attack
 		
-		# Play your custom animation instead of instantly hiding the shield!
+		# plays defense anim
 		animation_player.play("defense") 
 		
-		return               # Exit the function early so NO damage is taken!
+		return               # exits early to prevent damage
 		
-	# Check if this attack WILL kill them BEFORE changing the health
+	# checks for death
 	if health - value <= 0:
 		is_dead = true
-		unfocus() # Immediately hide the focus ring when they die
+		unfocus() # hides focus
 		
-	# Now update the health
+	# updates health
 	health -= value
 	
-	# explicitly call the animation ONLY when taking damage!
+	# plays damage anim
 	_play_animation()
 
-# NEW: Helper function to play the charge animation using code
+# animation for charging state
 func play_charge_animation():
 	if not is_dead:
 		var tween = create_tween()
-		# Scale down by 0.2 (from 1.0 to 0.8) over 0.2 seconds
+		# shrinks character
 		tween.tween_property(self, "scale", Vector2(0.8, 0.8), 0.2)
 		
 		tween.parallel().tween_property(self, "modulate", Color(1, 0.3, 0.3), 0.2)
 
-# NEW: Helper function to stop charging and launch an EXAGGERATED attack!
+# animation for charge launch
 func stop_charge_animation():
 	if not is_dead:
 		var tween = create_tween()
 		
-		# 1. Burst color back to normal quickly (0.1 seconds)
+		# resets color
 		tween.tween_property(self, "modulate", Color(1, 1, 1), 0.1)
 		
-		# 2. Concurrently scale up to 1.5 for a massive punch!
+		# scales up for big punch
 		tween.parallel().tween_property(self, "scale", Vector2(1.5, 1.5), 0.1)
 		
-		# 3. Then, snap back down to normal 1.0 scale over 0.15 seconds
+		# scales back to normal
 		tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.15)
 		
-		animation_player.play("idle") # Return to idle
+		animation_player.play("idle") # returns to idle
 
-# NEW: Helper function to play the attack animation using code
+# animation for normal attack
 func play_attack_animation():
 	if not is_dead:
 		var tween = create_tween()
-		# Scale up by 0.2 (from 1.0 to 1.2) over 0.1 seconds
+		# scales up
 		tween.tween_property(self, "scale", Vector2(1.2, 1.2), 0.1)
-		# Then scale back to normal over 0.1 seconds
+		# scales back
 		tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.1)

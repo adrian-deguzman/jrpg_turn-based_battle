@@ -5,23 +5,15 @@ var index: int = 0
 
 var battle_start: bool = false
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	players = get_children()
 	for i in players.size():
 		players[i].position = Vector2(0, i*180)
 		
-		#players[0].focus()
-	
-	# Give focus to the first alive player right when the scene loads
+	# focuses the first alive player on load
 	_focus_first_alive()
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta: float) -> void:
-	#pass
-
-# Helper function to find the first player that isn't dead
+# finds the first alive player
 func _focus_first_alive():
 	index = 0
 	for i in players.size():
@@ -30,15 +22,14 @@ func _focus_first_alive():
 			players[i].focus()
 			break
 
+# moves to the next alive player for command selection
 func _on_enemy_group_next_player() -> void:
 	if not battle_start:
 		var old_index = index
 		var temp_index = index
 		
-		# Loop through the array to find the NEXT alive player
 		for i in players.size():
 			temp_index += 1
-			# If we reach the end of the array, loop back to the start
 			if temp_index >= players.size():
 				temp_index = 0
 			
@@ -51,15 +42,14 @@ func switch_focus(x, y):
 	players[x].focus()
 	players[y].unfocus()
 
-
+# resets focus for a new round
 func _on_enemy_group_start_choose() -> void:
-	# Reset back to the first ALIVE player for a brand new round
 	for p in players:
 		p.unfocus()
 	_focus_first_alive()
 	battle_start = false
 
-
+# hides ui focus when action phase starts
 func _on_enemy_group_start_attack() -> void:
 	print("Battle starts!!!")
 	battle_start = true

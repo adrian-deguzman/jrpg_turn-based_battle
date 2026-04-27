@@ -44,7 +44,7 @@ scale = Vector2(1.315, 1.315)
 [node name="Attack" type="Button" parent="CanvasLayer/choice" unique_id=862653379]
 self_modulate = Color(6.286, 2.079, 2.079, 1)
 layout_mode = 2
-tooltip_text = "Low damage attach and sure hit.
+tooltip_text = "Low damage attack and sure hit.
 
 Detailed:
 Deal 1 damage. Never misses."
