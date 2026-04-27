@@ -13,23 +13,39 @@ func _ready() -> void:
 		
 		#players[0].focus()
 	
-	# Give focus to the first player right when the scene loads
-	if players.size() > 0:
-		players[0].focus()
+	# Give focus to the first alive player right when the scene loads
+	_focus_first_alive()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta: float) -> void:
 	#pass
-	
+
+# Helper function to find the first player that isn't dead
+func _focus_first_alive():
+	index = 0
+	for i in players.size():
+		if not players[i].is_dead:
+			index = i
+			players[i].focus()
+			break
+
 func _on_enemy_group_next_player() -> void:
 	if not battle_start:
-		if index < players.size() - 1:
-			index += 1
-			switch_focus(index, index - 1)
-		else:
-			index = 0 
-			switch_focus(index, players.size() - 1)
+		var old_index = index
+		var temp_index = index
+		
+		# Loop through the array to find the NEXT alive player
+		for i in players.size():
+			temp_index += 1
+			# If we reach the end of the array, loop back to the start
+			if temp_index >= players.size():
+				temp_index = 0
+			
+			if not players[temp_index].is_dead:
+				index = temp_index
+				switch_focus(index, old_index)
+				break
 
 func switch_focus(x, y):
 	players[x].focus()
@@ -37,11 +53,10 @@ func switch_focus(x, y):
 
 
 func _on_enemy_group_start_choose() -> void:
-	# Reset back to Player 0 for a brand new round
-	index = 0
+	# Reset back to the first ALIVE player for a brand new round
 	for p in players:
 		p.unfocus()
-	players[0].focus()
+	_focus_first_alive()
 	battle_start = false
 
 
