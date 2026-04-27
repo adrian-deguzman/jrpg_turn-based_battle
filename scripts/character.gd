@@ -130,17 +130,26 @@ func take_damage(value):
 	# explicitly call the animation ONLY when taking damage!
 	_play_animation()
 
-# NEW: Helper function to play the charge animation
+# NEW: Helper function to play the charge animation using code
 func play_charge_animation():
 	if not is_dead:
-		animation_player.play("charge")
+		var tween = create_tween()
+		# Scale down by 0.2 (from 1.0 to 0.8) over 0.2 seconds
+		tween.tween_property(self, "scale", Vector2(0.8, 0.8), 0.2)
 
-# NEW: Helper function to stop charging (Added from previous fix!)
+# NEW: Helper function to stop charging using code
 func stop_charge_animation():
 	if not is_dead:
+		var tween = create_tween()
+		# Scale back to normal (1.0) over 0.2 seconds
+		tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.2)
 		animation_player.play("idle") # Return to idle to stop levitating!
 
-# NEW: Helper function to play the punch animation
-func play_punch_animation():
+# NEW: Helper function to play the attack animation using code
+func play_attack_animation():
 	if not is_dead:
-		animation_player.play("punch")
+		var tween = create_tween()
+		# Scale up by 0.2 (from 1.0 to 1.2) over 0.1 seconds
+		tween.tween_property(self, "scale", Vector2(1.2, 1.2), 0.1)
+		# Then scale back to normal over 0.1 seconds
+		tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.1)
