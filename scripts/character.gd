@@ -136,14 +136,24 @@ func play_charge_animation():
 		var tween = create_tween()
 		# Scale down by 0.2 (from 1.0 to 0.8) over 0.2 seconds
 		tween.tween_property(self, "scale", Vector2(0.8, 0.8), 0.2)
+		
+		tween.parallel().tween_property(self, "modulate", Color(1, 0.3, 0.3), 0.2)
 
-# NEW: Helper function to stop charging using code
+# NEW: Helper function to stop charging and launch an EXAGGERATED attack!
 func stop_charge_animation():
 	if not is_dead:
 		var tween = create_tween()
-		# Scale back to normal (1.0) over 0.2 seconds
-		tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.2)
-		animation_player.play("idle") # Return to idle to stop levitating!
+		
+		# 1. Burst color back to normal quickly (0.1 seconds)
+		tween.tween_property(self, "modulate", Color(1, 1, 1), 0.1)
+		
+		# 2. Concurrently scale up to 1.5 for a massive punch!
+		tween.parallel().tween_property(self, "scale", Vector2(1.5, 1.5), 0.1)
+		
+		# 3. Then, snap back down to normal 1.0 scale over 0.15 seconds
+		tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.15)
+		
+		animation_player.play("idle") # Return to idle
 
 # NEW: Helper function to play the attack animation using code
 func play_attack_animation():
