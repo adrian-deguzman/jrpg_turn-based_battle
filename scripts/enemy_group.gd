@@ -8,20 +8,24 @@ var is_battling: bool = false
 var index: int = 0
 var wait_time: int = 2.5
 
-# NEW: Tracks which targeted move we selected from the menu (Attack vs Shoot)
+# Tracks which targeted move we selected from the menu (Attack vs Shoot)
 var current_selected_move: String = "Attack" 
+
+# NEW: Track multi-turn move states (Key: Character Index, Value: Target Index)
+var player_charging_targets: Dictionary = {}
+var enemy_charging_targets: Dictionary = {}
 
 @onready var choice: VBoxContainer = $"../CanvasLayer/choice"
 @onready var action_text: Label = $"../CanvasLayer/ActionText" # Reference to our new UI
 
-# NEW: References to our Game Over UI
+# References to our Game Over UI
 @onready var game_over_screen: Panel = $"../CanvasLayer/GameOverScreen" 
 @onready var game_over_text: Label = $"../CanvasLayer/GameOverScreen/GameOverText"
 @onready var restart_button: Button = $"../CanvasLayer/GameOverScreen/RestartButton" # New Button
 
 # The choices the enemy can make
 #var enemy_moves: Array = ["Attack", "Shoot", "Defend", "Drink Potion", "Power Punch"]
-var enemy_moves: Array = ["Attack", "Defend", "Drink Potion", "Shoot"] # Added Shoot for enemies
+var enemy_moves: Array = ["Attack", "Defend", "Drink Potion", "Shoot", "Power Punch"] # Added Power Punch
 
 signal start_choose
 signal next_player
@@ -130,9 +134,13 @@ func _action(stack):
 	
 	# 1. Pre-roll enemy moves so they can raise their shields early
 	var enemy_chosen_moves = []
-	for enemy in enemies:
+	for enemy_idx in enemies.size():
+		var enemy = enemies[enemy_idx]
 		if enemy.is_dead:
 			enemy_chosen_moves.append("Skip")
+		elif enemy_charging_targets.has(enemy_idx):
+			# NEW: If they were charging last round, force them to launch this round!
+			enemy_chosen_moves.append("Power Punch Launch")
 		else:
 			var move = enemy_moves.pick_random()
 			enemy_chosen_moves.append(move)
@@ -175,6 +183,21 @@ func _action(stack):
 			
 			if is_hit:
 				enemies[target_enemy_idx].take_damage(2.5)
+				
+		elif action.move == "Power Punch":
+			# NEW: Charge Phase
+			var target_enemy_idx = action.target
+			player_charging_targets[i] = target_enemy_idx # Save target for next round
+			_show_action_text(player_name, "Power Punch Charge", "")
+			
+		elif action.move == "Power Punch Launch":
+			# NEW: Launch Phase
+			var target_enemy_idx = action.target
+			player_charging_targets.erase(i) # Clear state
+			var target_enemy_name = "Enemy " + str(target_enemy_idx + 1)
+			
+			_show_action_text(player_name, "Power Punch Launch", target_enemy_name)
+			enemies[target_enemy_idx].take_damage(2.5) # Sure hit 2.5!
 			
 		elif action.move == "Defend":
 			_show_action_text(player_name, action.move, "")
@@ -246,6 +269,27 @@ func _action(stack):
 				
 				if is_hit:
 					random_target.take_damage(2.5)
+					
+		elif chosen_move == "Power Punch":
+			# NEW: Enemy Charge Phase
+			var alive_players = []
+			if player_group:
+				for p in player_group.players:
+					if not p.is_dead:
+						alive_players.append(p)
+			if alive_players.size() > 0:
+				var random_target = alive_players.pick_random()
+				var target_idx = player_group.players.find(random_target)
+				enemy_charging_targets[enemy_idx] = target_idx # Save target for next round
+				_show_action_text(enemy_name, "Power Punch Charge", "")
+				
+		elif chosen_move == "Power Punch Launch":
+			# NEW: Enemy Launch Phase
+			var target_idx = enemy_charging_targets[enemy_idx]
+			enemy_charging_targets.erase(enemy_idx)
+			var target_player_name = "Player " + str(target_idx + 1)
+			_show_action_text(enemy_name, "Power Punch Launch", target_player_name)
+			player_group.players[target_idx].take_damage(2.5) # Sure hit 2.5!
 				
 		elif chosen_move == "Defend":
 			_show_action_text(enemy_name, chosen_move, "")
@@ -280,7 +324,7 @@ func _action(stack):
 	show_choice()
 
 # Helper function to generate the text based on the move used
-# NEW: Added an optional 'is_hit' parameter so we can tell the player if they missed
+# Added an optional 'is_hit' parameter so we can tell the player if they missed
 func _show_action_text(actor: String, move: String, target: String, is_hit: bool = true):
 	action_text.show()
 	
@@ -295,10 +339,10 @@ func _show_action_text(actor: String, move: String, target: String, is_hit: bool
 		action_text.text = actor + " drank potion"
 	elif move == "Defend":
 		action_text.text = actor + " defends themself."
-	elif move == "Power Punch":
-		# Note: The delayed 2-turn logic will need a state variable later, 
-		# but here is the text generation for the charge phase!
-		action_text.text = actor + " charges a punch..."
+	elif move == "Power Punch Charge":
+		action_text.text = actor + " is charging a Power Punch!"
+	elif move == "Power Punch Launch":
+		action_text.text = actor + " launches a Power Punch at " + target + " for 2.5 damage!"
 
 func switch_focus(x, y):
 	enemies[x].focus()
@@ -318,11 +362,29 @@ func _get_current_acting_player_num() -> int:
 	return 1
 
 func show_choice():
-	# action_text.hide() # REMOVED: We now use this to show whose turn it is
 	action_text.show()
 	
-	var current_player_num = _get_current_acting_player_num()
-	action_text.text = "(Choose move for Player " + str(current_player_num) + ")"
+	# NEW: Find the actual player object whose turn it is
+	var alive_players = []
+	if player_group:
+		for p in player_group.players:
+			if not p.is_dead:
+				alive_players.append(p)
+				
+	if alive_players.size() > 0 and action_queue.size() < alive_players.size():
+		var current_player = alive_players[action_queue.size()]
+		var current_player_idx = player_group.players.find(current_player)
+		
+		# Check if this player is charging a power punch
+		if player_charging_targets.has(current_player_idx):
+			# Auto-queue the launch and skip the menu!
+			action_queue.push_back({"move": "Power Punch Launch", "target": player_charging_targets[current_player_idx]})
+			emit_signal("next_player")
+			_check_action_queue()
+			return
+			
+		var current_player_num = current_player_idx + 1
+		action_text.text = "(Choose move for Player " + str(current_player_num) + ")"
 	
 	choice.show()
 	choice.find_child("Attack").grab_focus()
@@ -351,9 +413,14 @@ func _on_attack_pressed() -> void:
 	choice.hide()
 	_start_choosing()
 
-# NEW FUNCTION: Connect your "Shoot" button to this signal!
 func _on_shoot_pressed() -> void:
 	current_selected_move = "Shoot" # Lock in our choice
+	choice.hide()
+	_start_choosing()
+	
+# NEW FUNCTION: Connect your "Power Punch" button to this signal!
+func _on_power_punch_pressed() -> void:
+	current_selected_move = "Power Punch" # Lock in our choice
 	choice.hide()
 	_start_choosing()
 

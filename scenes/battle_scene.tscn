@@ -102,4 +102,5 @@ text = "Restart"
 [connection signal="pressed" from="CanvasLayer/choice/Shoot" to="EnemyGroup" method="_on_shoot_pressed"]
 [connection signal="pressed" from="CanvasLayer/choice/Defend" to="EnemyGroup" method="_on_defend_pressed"]
 [connection signal="pressed" from="CanvasLayer/choice/Drink Potion" to="EnemyGroup" method="_on_drink_potion_pressed"]
+[connection signal="pressed" from="CanvasLayer/choice/Power Punch" to="EnemyGroup" method="_on_power_punch_pressed"]
 [connection signal="pressed" from="CanvasLayer/GameOverScreen/RestartButton" to="EnemyGroup" method="_on_restart_button_pressed"]
