@@ -99,3 +99,8 @@ func take_damage(value):
 	
 	# explicitly call the animation ONLY when taking damage!
 	_play_animation()
+
+# NEW: Helper function to play the charge animation
+func play_charge_animation():
+	if not is_dead:
+		animation_player.play("charge")

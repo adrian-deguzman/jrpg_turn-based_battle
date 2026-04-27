@@ -189,6 +189,7 @@ func _action(stack):
 			var target_enemy_idx = action.target
 			player_charging_targets[i] = target_enemy_idx # Save target for next round
 			_show_action_text(player_name, "Power Punch Charge", "")
+			player_group.players[i].play_charge_animation() # <--- ADD THIS LINE
 			
 		elif action.move == "Power Punch Launch":
 			# NEW: Launch Phase
@@ -282,6 +283,7 @@ func _action(stack):
 				var target_idx = player_group.players.find(random_target)
 				enemy_charging_targets[enemy_idx] = target_idx # Save target for next round
 				_show_action_text(enemy_name, "Power Punch Charge", "")
+				enemy.play_charge_animation() # <--- ADD THIS LINE
 				
 		elif chosen_move == "Power Punch Launch":
 			# NEW: Enemy Launch Phase
