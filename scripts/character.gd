@@ -18,6 +18,8 @@ func _update_progress_bar():
 func _play_animation():
 	animation_player.play("hurt")
 	
+	#animation_player.queue("idle")
+	
 func focus():
 	_focus.show()
 

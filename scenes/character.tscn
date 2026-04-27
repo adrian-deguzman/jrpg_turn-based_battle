@@ -1,13 +1,25 @@
 [gd_scene format=3 uid="uid://c4m4wbplyxgqi"]
 
 [ext_resource type="Script" uid="uid://dj3h1sxmc7kyh" path="res://scripts/character.gd" id="1_lrhn5"]
-[ext_resource type="Texture2D" uid="uid://dbwnev7k7eg30" path="res://assets/enemygroup/Onre/Idle.png" id="1_rkhd4"]
 [ext_resource type="Texture2D" uid="uid://dt66tchlvhuvm" path="res://assets/cursor/link3.png" id="2_lrhn5"]
+[ext_resource type="Texture2D" uid="uid://dx6n8kyoo7tij" path="res://assets/playergroup/Wizard/Idle.png" id="2_my7n2"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_rkhd4"]
 
 [sub_resource type="Animation" id="Animation_lrhn5"]
 length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
 
 [sub_resource type="Animation" id="Animation_my7n2"]
 resource_name = "hurt"
@@ -26,12 +38,30 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_dp8ca"]
 resource_name = "idle"
+loop_mode = 1
+
+[sub_resource type="Animation" id="Animation_0lw5n"]
+resource_name = "idle_2"
+length = 0.6666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_dp8ca"]
 _data = {
 &"RESET": SubResource("Animation_lrhn5"),
 &"hurt": SubResource("Animation_my7n2"),
-&"idle": SubResource("Animation_dp8ca")
+&"idle": SubResource("Animation_dp8ca"),
+&"idle_2": SubResource("Animation_0lw5n")
 }
 
 [node name="Character" type="CharacterBody2D" unique_id=1830078391]
@@ -48,7 +78,7 @@ polygon = PackedVector2Array(-39, -28.296295, 0, -37.80105, 39, -28.296295, 0, -
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=798288966]
 position = Vector2(0, -128.025)
 scale = Vector2(2, 2)
-texture = ExtResource("1_rkhd4")
+texture = ExtResource("2_my7n2")
 flip_h = true
 hframes = 6
 
