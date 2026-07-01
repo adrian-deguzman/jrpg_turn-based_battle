@@ -1,0 +1,133 @@
+[gd_scene format=3 uid="uid://86tbiektq2k3"]
+
+[ext_resource type="Script" uid="uid://b8yqgor4f8dis" path="res://scripts/battle_scene.gd" id="1_8qdv8"]
+[ext_resource type="PackedScene" uid="uid://d1gn3brt5644m" path="res://scenes/enemy_group.tscn" id="1_idkgt"]
+[ext_resource type="Texture2D" uid="uid://bola1vo55met5" path="res://assets/background/dead forest.png" id="1_kinr6"]
+[ext_resource type="PackedScene" uid="uid://dkwdcaon6qmq1" path="res://scenes/player_group.tscn" id="3_rca61"]
+
+[node name="BattleScene" type="Node2D" unique_id=2089658605]
+script = ExtResource("1_8qdv8")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=794658426]
+modulate = Color(0.45, 0.45, 0.45, 1)
+offset_left = -173.0
+offset_top = -203.0
+offset_right = -101.888885
+offset_bottom = -163.0
+scale = Vector2(21.345, 21.345)
+texture = ExtResource("1_kinr6")
+expand_mode = 3
+
+[node name="EnemyGroup" parent="." unique_id=919007267 node_paths=PackedStringArray("player_group") instance=ExtResource("1_idkgt")]
+position = Vector2(816, 209)
+player_group = NodePath("../PlayerGroup")
+
+[node name="PlayerGroup" parent="." unique_id=57050628 instance=ExtResource("3_rca61")]
+position = Vector2(313, 206)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=783896607]
+
+[node name="choice" type="VBoxContainer" parent="CanvasLayer" unique_id=643889893]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -55.0
+offset_top = -234.88501
+offset_right = 55.0
+offset_bottom = -63.884644
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(1.315, 1.315)
+
+[node name="Attack" type="Button" parent="CanvasLayer/choice" unique_id=862653379]
+self_modulate = Color(6.286, 2.079, 2.079, 1)
+layout_mode = 2
+tooltip_text = "Low damage attack and sure hit.
+
+Detailed:
+Deal 1 damage. Never misses."
+text = "Attack"
+
+[node name="Shoot" type="Button" parent="CanvasLayer/choice" unique_id=202369878]
+self_modulate = Color(6.2861433, 2.0787497, 2.0787497, 1)
+layout_mode = 2
+tooltip_text = "High damage attact with 50% miss rate.
+
+Detailed:
+Deal 2.5 damage but 50% chance of missing."
+text = "Shoot"
+
+[node name="Defend" type="Button" parent="CanvasLayer/choice" unique_id=423918567]
+self_modulate = Color(6.2861433, 2.0787497, 2.0787497, 1)
+layout_mode = 2
+tooltip_text = "Block one attack.
+
+Detailed:
+Creates a shield to block the first attack received, negating all damage. Succeeding damage in the same round will not be affected."
+text = "Defend"
+
+[node name="Drink Potion" type="Button" parent="CanvasLayer/choice" unique_id=1096377349]
+self_modulate = Color(6.2861433, 2.0787497, 2.0787497, 1)
+layout_mode = 2
+tooltip_text = "Heal small health.
+
+Detailed:
+Recover 0.5 health. For context, max health is 3."
+text = "Drink Potion"
+
+[node name="Power Punch" type="Button" parent="CanvasLayer/choice" unique_id=506375910]
+self_modulate = Color(6.2861433, 2.0787497, 2.0787497, 1)
+layout_mode = 2
+tooltip_text = "Charge for one round, and deal high damage on next round that is also sure hit.
+
+Detailed:
+Charges on the first round. On the following round, player skips move selection but deals 2.5 damage that never misses."
+text = "Power Punch"
+
+[node name="ActionText" type="Label" parent="CanvasLayer" unique_id=1396912143]
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 6.825
+offset_bottom = 40.825
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameOverScreen" type="Panel" parent="CanvasLayer" unique_id=1090136640]
+visible = false
+self_modulate = Color(0, 0, 0, 1)
+offset_left = 341.0
+offset_top = 145.0
+offset_right = 832.0
+offset_bottom = 480.0
+
+[node name="GameOverText" type="Label" parent="CanvasLayer/GameOverScreen" unique_id=1198800983]
+layout_mode = 0
+offset_left = 157.00002
+offset_top = 57.0
+offset_right = 324.0
+offset_bottom = 112.0
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RestartButton" type="Button" parent="CanvasLayer/GameOverScreen" unique_id=732350829]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 253.0
+offset_right = 281.0
+offset_bottom = 284.0
+text = "Restart"
+
+[connection signal="next_player" from="EnemyGroup" to="PlayerGroup" method="_on_enemy_group_next_player"]
+[connection signal="start_attack" from="EnemyGroup" to="PlayerGroup" method="_on_enemy_group_start_attack"]
+[connection signal="start_choose" from="EnemyGroup" to="PlayerGroup" method="_on_enemy_group_start_choose"]
+[connection signal="pressed" from="CanvasLayer/choice/Attack" to="EnemyGroup" method="_on_attack_pressed"]
+[connection signal="pressed" from="CanvasLayer/choice/Shoot" to="EnemyGroup" method="_on_shoot_pressed"]
+[connection signal="pressed" from="CanvasLayer/choice/Defend" to="EnemyGroup" method="_on_defend_pressed"]
+[connection signal="pressed" from="CanvasLayer/choice/Drink Potion" to="EnemyGroup" method="_on_drink_potion_pressed"]
+[connection signal="pressed" from="CanvasLayer/choice/Power Punch" to="EnemyGroup" method="_on_power_punch_pressed"]
+[connection signal="pressed" from="CanvasLayer/GameOverScreen/RestartButton" to="EnemyGroup" method="_on_restart_button_pressed"]
